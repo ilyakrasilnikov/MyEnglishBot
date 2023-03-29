@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:mysql://database-englishbot.cyt5pupaqbyz.us-east-1.rds.amazonaws.com:3306/englishbot
+    username: admin
+    password: buLINHZonNPjoAHbrbbB
+
+bot:
+  username: en_chat_bot
+  token: 6148468918:AAEwkWVnJ4l_o0QfC5n4P2M3IG8q55IihXg
+
