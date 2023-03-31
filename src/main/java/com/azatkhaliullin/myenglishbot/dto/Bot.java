@@ -1,7 +1,6 @@
 package com.azatkhaliullin.myenglishbot.dto;
 
-import com.azatkhaliullin.myenglishbot.awsTranslate.AWSTranslator;
-import com.azatkhaliullin.myenglishbot.awsTranslate.ITranslator.Language;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
