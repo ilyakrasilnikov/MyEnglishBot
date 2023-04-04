@@ -13,11 +13,11 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 @Slf4j
 public class MyEnglishBotApplication {
 
-    public static void main(String[] args) throws TelegramApiException {
+    public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(MyEnglishBotApplication.class, args);
-        TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         try {
-            telegramBotsApi.registerBot(context.getBean(Bot.class));
+            new TelegramBotsApi(DefaultBotSession.class).
+                    registerBot(context.getBean(Bot.class));
         } catch (TelegramApiException e) {
             log.error("Ошибка при регистрации бота", e);
         }

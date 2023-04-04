@@ -1,21 +1,22 @@
 package com.azatkhaliullin.myenglishbot.dto;
 
-
+import com.azatkhaliullin.myenglishbot.data.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-@Component
 @Slf4j
 public class Bot extends TelegramLongPollingBot {
 
     private final BotProperties botProperties;
+    private final UserRepository userRepo;
 
-    private Bot(BotProperties botProperties) {
+    public Bot(BotProperties botProperties,
+               UserRepository userRepo) {
         this.botProperties = botProperties;
+        this.userRepo = userRepo;
     }
 
     @Override
@@ -30,14 +31,17 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        String messageText = update.getMessage().getText();
-        String chatId = String.valueOf(update.getMessage().getChatId());
-        botProperties.setChatId(chatId);
-        sendMessage(chatId, messageText);
+        org.telegram.telegrambots.meta.api.objects.User from = update.getMessage().getFrom();
+        String text = update.getMessage().getText();
+        User user = User.saveUser(userRepo, from);
+        sendMessage(user, text);
     }
 
-    public void sendMessage(String chatId, String messageText) {
-        SendMessage message = new SendMessage(chatId, messageText);
+    public void sendMessage(User who,
+                            String messageText) {
+        SendMessage message = new SendMessage(
+                String.valueOf(who.getIdUser()),
+                messageText);
         try {
             execute(message);
         } catch (TelegramApiException e) {

@@ -7,26 +7,25 @@ import java.util.concurrent.TimeoutException;
 public interface ITranslator {
 
     /**
-     * Значение таймаута перевода по умолчанию
-     */
-    long DEFAULT_TIMEOUT_MSEC = 3000;
-
-    /**
-     * @param source язык, с которого нужно перевести
-     * @param target язык, на который нужно перевести
-     * @param text   фраза/слово для перевода
-     * @return переведённая фраза/слово
-     * @throws TimeoutException - не удалось выполнить перевод за отведённое время
+     * Создает объект запроса и выполняет перевод текста с помощью AWS Translate.
+     *
+     * @param translateClient клиент AWS Translate
+     * @param source          язык исходного текста
+     * @param target          язык целевого текста
+     * @param text            текст для перевода
+     * @return переведенный текст
+     * @throws TimeoutException в случае, если не удалось получить перевод
      */
     String translate(TranslateClient translateClient,
-                     Language source, Language target, String text) throws TimeoutException;
+                     Language source,
+                     Language target,
+                     String text) throws TimeoutException;
 
     /**
-     * Языки, доступные для перевода
+     * Доступные языки перевода
      */
     enum Language {
-        RU("ru"),
-        EN("en");
+        RU("ru"), EN("en");
 
         /**
          * Код языка в AWS Translate

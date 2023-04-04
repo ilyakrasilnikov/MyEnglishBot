@@ -7,31 +7,23 @@ import software.amazon.awssdk.services.translate.model.TranslateTextRequest;
 import software.amazon.awssdk.services.translate.model.TranslateTextResponse;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
 
 @Slf4j
 public class AWSTranslator implements ITranslator {
-
-    private static final AWSTranslator awsTranslator = null;
     private final ThreadPoolExecutor executorService;
 
-    private AWSTranslator() {
-        executorService = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+    public AWSTranslator(ThreadPoolExecutor executor) {
+        this.executorService = executor;
     }
-
-    public static AWSTranslator getInstance() {
-        if (awsTranslator == null) {
-            return new AWSTranslator();
-        }
-        return awsTranslator;
-    }
-
 
     @Override
-    public String translate(TranslateClient translateClient, Language source, Language target, String text) {
+    public String translate(TranslateClient translateClient,
+                            Language source,
+                            Language target,
+                            String text) {
         TranslateTextRequest request = TranslateTextRequest.builder()
                 .sourceLanguageCode(source.getAwsTranslateValue())
                 .targetLanguageCode(target.getAwsTranslateValue())
@@ -42,7 +34,17 @@ public class AWSTranslator implements ITranslator {
         return response.translatedText();
     }
 
-    private Future<String> getTranslationSubmit(Language source, Language target, String text) {
+    /**
+     * Приватный метод, который используется для отправки задачи на перевод в пул потоков.
+     *
+     * @param source язык исходного текста
+     * @param target язык целевого текста
+     * @param text   текст для перевода
+     * @return объект Future<String>, который содержит переведенный текст
+     */
+    private Future<String> getTranslationSubmit(Language source,
+                                                Language target,
+                                                String text) {
         return executorService.submit(() -> {
             try (TranslateClient client = TranslateClient.builder()
                     .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
@@ -56,7 +58,18 @@ public class AWSTranslator implements ITranslator {
         });
     }
 
-    public String translate(Language source, Language target, String text) {
+    /**
+     * Метод для перевода текста в асинхронном режиме.
+     * Если возникают ошибки при выполнении задачи, то метод выбрасывает RuntimeException.
+     *
+     * @param source язык исходного текста
+     * @param target язык целевого текста
+     * @param text   текст для перевода
+     * @return переведенный текст
+     */
+    public String translate(Language source,
+                            Language target,
+                            String text) {
         try {
             return getTranslationSubmit(source, target, text).get();
         } catch (InterruptedException | ExecutionException e) {
