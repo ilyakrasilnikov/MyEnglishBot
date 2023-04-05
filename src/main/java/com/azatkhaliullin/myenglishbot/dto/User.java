@@ -30,7 +30,10 @@ public class User {
                 .idUser(userTG.getId())
                 .username(userTG.getUserName())
                 .build();
-        userRepo.save(user);
+        if (!userRepo.existsByIdUser(user.idUser)) {
+            userRepo.save(user);
+        }
         return user;
     }
+
 }
