@@ -23,6 +23,7 @@ public class User {
     private Long id;
     private Long idUser;
     private String username;
+    private UserStatus userStatus;
 
     public static User saveUser(UserRepository userRepo,
                                 org.telegram.telegrambots.meta.api.objects.User userTG) {
@@ -34,6 +35,10 @@ public class User {
             userRepo.save(user);
         }
         return user;
+    }
+
+    public enum UserStatus {
+        WAIT_FOR_TRANSLATION
     }
 
 }

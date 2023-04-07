@@ -2,7 +2,9 @@ package com.azatkhaliullin.myenglishbot.awsTranslate;
 
 import software.amazon.awssdk.services.translate.TranslateClient;
 
-import java.util.concurrent.TimeoutException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public interface ITranslator {
 
@@ -14,12 +16,11 @@ public interface ITranslator {
      * @param target          язык целевого текста
      * @param text            текст для перевода
      * @return переведенный текст
-     * @throws TimeoutException в случае, если не удалось получить перевод
      */
     String translate(TranslateClient translateClient,
                      Language source,
                      Language target,
-                     String text) throws TimeoutException;
+                     String text);
 
     /**
      * Доступные языки перевода
@@ -38,6 +39,14 @@ public interface ITranslator {
 
         public String getAwsTranslateValue() {
             return awsTranslateValue;
+        }
+
+        public static List<String> getLanguagePairs() {
+            return Arrays.stream(Language.values())
+                    .flatMap(l1 -> Arrays.stream(Language.values())
+                            .filter(l2 -> l1 != l2)
+                            .map(l2 -> l1.name() + "_" + l2.name()))
+                    .collect(Collectors.toList());
         }
     }
 

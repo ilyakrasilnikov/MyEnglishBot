@@ -1,6 +1,6 @@
 package com.azatkhaliullin.myenglishbot;
 
-import com.azatkhaliullin.myenglishbot.dto.Bot;
+import com.azatkhaliullin.myenglishbot.domain.Bot;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

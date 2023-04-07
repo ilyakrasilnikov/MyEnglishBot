@@ -1,6 +1,8 @@
-package com.azatkhaliullin.myenglishbot.dto;
+package com.azatkhaliullin.myenglishbot.domain;
 
 import com.azatkhaliullin.myenglishbot.data.UserRepository;
+import com.azatkhaliullin.myenglishbot.dto.BotProperties;
+import com.azatkhaliullin.myenglishbot.dto.User;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,7 +13,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -19,15 +20,18 @@ public class Bot extends TelegramLongPollingBot {
 
     private final BotProperties botProperties;
     private final BotCommandHandler botCommandHandler;
+    private final BotCallbackQueryHandler botCallbackQueryHandler;
     private final UserRepository userRepo;
 
     public Bot(BotProperties botProperties,
                BotCommandHandler botCommandHandler,
+               BotCallbackQueryHandler botCallbackQueryHandler,
                UserRepository userRepo) {
         this.botProperties = botProperties;
         this.botCommandHandler = botCommandHandler;
+        this.botCallbackQueryHandler = botCallbackQueryHandler;
         this.userRepo = userRepo;
-        BotMenu.registerBotCommands(this);
+        BotUtility.registerBotCommands(this);
     }
 
     @Override
@@ -42,14 +46,14 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
+        Message msg = update.getMessage();
+        CallbackQuery callbackQuery = update.getCallbackQuery();
+        if (update.hasCallbackQuery()) {
+            processingCallbackQuery(this, callbackQuery);
+        } else if (update.hasMessage() && update.getMessage().hasText()) {
             org.telegram.telegrambots.meta.api.objects.User userTG = update.getMessage().getFrom();
             User user = User.saveUser(userRepo, userTG);
-            Message msg = update.getMessage();
-            CallbackQuery callbackQuery = update.getCallbackQuery();
-            if (callbackQuery != null) {
-                processingCallbackQuery(callbackQuery);
-            } else if (!processingBotCommands(this, user, msg)) {
+            if (!processingBotCommands(this, user, msg)) {
                 processingMessage(user, msg);
             }
         }
@@ -57,11 +61,12 @@ public class Bot extends TelegramLongPollingBot {
 
     public void sendMessage(User who,
                             String messageText) {
-        SendMessage message = new SendMessage(
-                String.valueOf(who.getIdUser()),
-                messageText);
+        SendMessage sm = SendMessage.builder()
+                .chatId(who.getIdUser())
+                .text(messageText)
+                .build();
         try {
-            execute(message);
+            execute(sm);
         } catch (TelegramApiException e) {
             log.error("Ошибка при отправке сообщения", e);
         }
@@ -81,27 +86,8 @@ public class Bot extends TelegramLongPollingBot {
         try {
             execute(sm);
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+            log.error("Ошибка при отправке встроенной клавиатуре", e);
         }
-    }
-
-    public static List<List<InlineKeyboardButton>> buildInlineKeyboardMarkup(List<String> value,
-                                                                             int cntButtonInRow) {
-        List<List<InlineKeyboardButton>> valueList = new ArrayList<>();
-        List<InlineKeyboardButton> row = new ArrayList<>();
-        for (String string : value) {
-            if (row.size() >= cntButtonInRow) {
-                valueList.add(row);
-                row = new ArrayList<>();
-            }
-            row.add(InlineKeyboardButton
-                    .builder()
-                    .text(string)
-                    .callbackData(string)
-                    .build());
-        }
-        valueList.add(row);
-        return valueList;
     }
 
     public boolean processingBotCommands(Bot bot,
@@ -110,7 +96,11 @@ public class Bot extends TelegramLongPollingBot {
         return botCommandHandler.handleCommand(bot, user, msg);
     }
 
-    private void processingCallbackQuery(CallbackQuery callbackQuery) {
+    private void processingCallbackQuery(Bot bot,
+                                         CallbackQuery callbackQuery) {
+        org.telegram.telegrambots.meta.api.objects.User userTG = callbackQuery.getFrom();
+        User user = User.saveUser(userRepo, userTG);
+        botCallbackQueryHandler.handleCallback(bot, user, callbackQuery);
     }
 
     private void processingMessage(User user, Message message) {
