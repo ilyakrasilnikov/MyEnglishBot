@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 public interface UserRepository
         extends CrudRepository<User, Long> {
 
-    boolean existsByIdUser(Long id);
+    User getUserById(Long id);
 
 }

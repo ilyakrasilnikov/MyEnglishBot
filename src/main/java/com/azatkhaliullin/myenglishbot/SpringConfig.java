@@ -19,8 +19,9 @@ public class SpringConfig {
     public Bot bot(UserRepository userRepo) {
         return new Bot(botProperties(),
                 botCommandHandler(),
-                botCallbackQueryHandler(),
-                userRepo);
+                botCallbackQueryHandler(userRepo),
+                userRepo,
+                awsTranslator());
     }
 
     @Bean
@@ -29,8 +30,8 @@ public class SpringConfig {
     }
 
     @Bean
-    public AWSTranslator awsTranslator(ThreadPoolExecutor executorService) {
-        return new AWSTranslator(executorService);
+    public AWSTranslator awsTranslator() {
+        return new AWSTranslator(threadPoolExecutor());
     }
 
     @Bean
@@ -44,8 +45,8 @@ public class SpringConfig {
     }
 
     @Bean
-    public BotCallbackQueryHandler botCallbackQueryHandler() {
-        return new BotCallbackQueryHandler();
+    public BotCallbackQueryHandler botCallbackQueryHandler(UserRepository userRepo) {
+        return new BotCallbackQueryHandler(userRepo);
     }
 
 }

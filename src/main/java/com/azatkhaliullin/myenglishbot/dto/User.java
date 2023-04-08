@@ -1,9 +1,7 @@
 package com.azatkhaliullin.myenglishbot.dto;
 
-import com.azatkhaliullin.myenglishbot.data.UserRepository;
+import com.azatkhaliullin.myenglishbot.awsTranslate.ITranslator.Language;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,29 +13,24 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder=true)
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long idUser;
     private String username;
-    private UserStatus userStatus;
+    private DialogueStep dialogueStep;
+    private Language source;
+    private Language target;
 
-    public static User saveUser(UserRepository userRepo,
-                                org.telegram.telegrambots.meta.api.objects.User userTG) {
-        User user = new UserBuilder()
-                .idUser(userTG.getId())
+    public static User convertTGUserToUser(org.telegram.telegrambots.meta.api.objects.User userTG) {
+        return new UserBuilder()
+                .id(userTG.getId())
                 .username(userTG.getUserName())
                 .build();
-        if (!userRepo.existsByIdUser(user.idUser)) {
-            userRepo.save(user);
-        }
-        return user;
     }
 
-    public enum UserStatus {
+    public enum DialogueStep {
         WAIT_FOR_TRANSLATION
     }
 
