@@ -13,7 +13,7 @@ import java.util.Map;
 interface CallbackQueryHandler {
     void handleCallback(Bot bot,
                         User user,
-                        CallbackQuery callbackQuery);
+                        String[] callbackSplit);
 }
 
 public class BotCallbackQueryHandler {
@@ -24,20 +24,21 @@ public class BotCallbackQueryHandler {
         this.userRepo = userRepo;
         callbackQueries = new HashMap<>();
         callbackQueries.put(KeyboardType.LANGUAGE, this::handleTranslateCallback);
+        callbackQueries.put(KeyboardType.VOICE, this::handleVoiceCallback);
     }
 
     public void handleCallback(Bot bot,
                                User user,
                                CallbackQuery callbackQuery) {
-        String[] split = callbackQuery.getData().split("/");
-        CallbackQueryHandler handler = callbackQueries.get(KeyboardType.valueOf(split[0]));
-        handler.handleCallback(bot, user, callbackQuery);
+        String[] callbackSplit = callbackQuery.getData().split("/");
+        CallbackQueryHandler handler = callbackQueries.get(KeyboardType.valueOf(callbackSplit[0]));
+        handler.handleCallback(bot, user, callbackSplit);
     }
 
     private void handleTranslateCallback(Bot bot,
                                          User user,
-                                         CallbackQuery callbackQuery) {
-        String[] split = callbackQuery.getData().split("/")[1].split("_");
+                                         String[] callbackSplit) {
+        String[] split = callbackSplit[1].split("_");
         Language source = Language.valueOf(split[0]);
         Language target = Language.valueOf(split[1]);
         user = userRepo.getUserById(user.getId());
@@ -46,5 +47,12 @@ public class BotCallbackQueryHandler {
         user.setTarget(target);
         userRepo.save(user);
         bot.sendMessage(user, "Введите слово либо фразу для перевода");
+    }
+
+    private void handleVoiceCallback(Bot bot,
+                                     User user,
+                                     String[] callbackSplit) {
+        bot.sendVoice(user, callbackSplit[1]);
+
     }
 }

@@ -55,9 +55,9 @@ public class BotCommandHandler {
         bot.sendInlineKeyboard(user,
                 "Выберите языковую пару для перевода",
                 BotUtility.buildInlineKeyboardMarkup(languagePairs
-                        .stream().map(item -> Pair.of(
-                                item, BotUtility.KeyboardType.LANGUAGE.name() + "/" + item))
-                        .collect(Collectors.toList()),
+                                .stream().map(item -> Pair.of(
+                                        item, BotUtility.KeyboardType.LANGUAGE.name() + "/" + item))
+                                .collect(Collectors.toList()),
                         2));
     }
 }

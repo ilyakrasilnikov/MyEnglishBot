@@ -62,7 +62,7 @@ public class BotUtility {
     }
 
     public enum KeyboardType {
-        LANGUAGE, WEATHER
+        LANGUAGE, VOICE
     }
 
 }

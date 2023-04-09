@@ -1,5 +1,7 @@
 package com.azatkhaliullin.myenglishbot.awsTranslate;
 
+import software.amazon.awssdk.services.polly.PollyClient;
+import software.amazon.awssdk.services.polly.model.Voice;
 import software.amazon.awssdk.services.translate.TranslateClient;
 
 import java.util.Arrays;
@@ -17,28 +19,38 @@ public interface ITranslator {
      * @param text            текст для перевода
      * @return переведенный текст
      */
-    String translate(TranslateClient translateClient,
-                     Language source,
-                     Language target,
-                     String text);
+    String translateText(TranslateClient translateClient,
+                         Language source,
+                         Language target,
+                         String text);
+
+    Voice pollyVoice(PollyClient pollyClient,
+                     Language language);
 
     /**
      * Доступные языки перевода
      */
     enum Language {
-        RU("ru"), EN("en");
+        RU("ru", "ru-RU"), EN("en", "en-US");
 
         /**
          * Код языка в AWS Translate
          */
         private final String awsTranslateValue;
+        private final String awsPollyValue;
 
-        Language(String awsTranslateValue) {
+
+        Language(String awsTranslateValue, String awsPollyValue) {
             this.awsTranslateValue = awsTranslateValue;
+            this.awsPollyValue = awsPollyValue;
         }
 
         public String getAwsTranslateValue() {
             return awsTranslateValue;
+        }
+
+        public String getAwsPollyValue() {
+            return awsPollyValue;
         }
 
         public static List<String> getLanguagePairs() {

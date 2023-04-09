@@ -1,22 +1,29 @@
 package com.azatkhaliullin.myenglishbot.domain;
 
 import com.azatkhaliullin.myenglishbot.awsTranslate.AWSTranslator;
+import com.azatkhaliullin.myenglishbot.awsTranslate.ITranslator;
 import com.azatkhaliullin.myenglishbot.data.UserRepository;
 import com.azatkhaliullin.myenglishbot.dto.BotProperties;
 import com.azatkhaliullin.myenglishbot.dto.User;
 import com.azatkhaliullin.myenglishbot.dto.User.DialogueStep;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.util.Pair;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendVoice;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class Bot extends TelegramLongPollingBot {
@@ -59,10 +66,10 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendMessage(User who,
+    public void sendMessage(User recipient,
                             String messageText) {
         SendMessage sm = SendMessage.builder()
-                .chatId(who.getId())
+                .chatId(recipient.getId())
                 .text(messageText)
                 .build();
         try {
@@ -72,14 +79,32 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendInlineKeyboard(User who,
+    public void sendVoice(User recipient,
+                          String messageText) {
+        byte[] voiceBytes = awsTranslator.getVoice(ITranslator.Language.EN, messageText);
+        InputStream inputStream = new ByteArrayInputStream(voiceBytes);
+        InputFile voiceFile = new InputFile()
+                .setMedia(inputStream, messageText);
+        SendVoice sv = SendVoice.builder()
+                .chatId(recipient.getId())
+                .voice(voiceFile)
+                .build();
+        try {
+            execute(sv);
+            sv.setDisableNotification(true);
+        } catch (TelegramApiException e) {
+            log.error("Ошибка при отправке голового сообщения", e);
+        }
+    }
+
+    public void sendInlineKeyboard(User recipient,
                                    String messageText,
                                    List<List<InlineKeyboardButton>> lists) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(lists);
         SendMessage sm = SendMessage.builder()
                 .replyMarkup(inlineKeyboardMarkup)
-                .chatId(who.getId())
+                .chatId(recipient.getId())
                 .text(messageText)
                 .build();
         try {
@@ -106,23 +131,27 @@ public class Bot extends TelegramLongPollingBot {
                 ? userFromDbOptional.get().toBuilder().username(userFromMessage.getUsername()).build()
                 : userFromMessage);
 
-        // Обработка команд бота
         if (botCommandHandler.handleCommand(this, userFromMessage, msg)) {
-            // Если обработчик вернул true, значит команда обработана
             return;
         }
 
         if (userFromMessage.getDialogueStep() == DialogueStep.WAIT_FOR_TRANSLATION) {
-            // Если пользователь находится в режиме ожидания перевода, то выполняем перевод текста
-            String translate = awsTranslator.translate(
+            String translate = awsTranslator.getTranslate(
                     userFromMessage.getSource(),
                     userFromMessage.getTarget(),
                     msg.getText());
-            sendMessage(userFromMessage, translate);
+            List<String> singleton = List.of("Прослушать перевод");
+            sendInlineKeyboard(
+                    userFromMessage,
+                    translate,
+                    BotUtility.buildInlineKeyboardMarkup(singleton
+                                    .stream().map(item -> Pair.of(
+                                            item, BotUtility.KeyboardType.VOICE.name() + "/" + translate))
+                                    .collect(Collectors.toList()),
+                            1));
             userFromMessage.setDialogueStep(null);
             userRepo.save(userFromMessage);
         } else {
-            // Если пользователь не находится в режиме ожидания перевода, то отправляем ему его сообщение без изменений
             sendMessage(userFromMessage, msg.getText());
         }
     }
