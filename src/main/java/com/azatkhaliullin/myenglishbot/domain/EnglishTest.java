@@ -1,21 +1,26 @@
 package com.azatkhaliullin.myenglishbot.domain;
 
-import com.azatkhaliullin.myenglishbot.dto.Answer;
 import com.azatkhaliullin.myenglishbot.dto.Question;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.util.Pair;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Entity
+@Slf4j
 public class EnglishTest {
 
     @Id
@@ -28,23 +33,19 @@ public class EnglishTest {
     private int numberCorrectAnswers;
 
     public EnglishTest() {
+        ObjectMapper objectMapper = new ObjectMapper();
         List<Question> questions = new ArrayList<>();
-        List<Answer> answers = new ArrayList<>();
-        answers.add(new Answer("is", false));
-        answers.add(new Answer("am", false));
-        answers.add(new Answer("are", true));
-        answers.add(new Answer("be", false));
-        questions.add(new Question("This is a notebook. Those ___ notebooks.", answers));
-
-        List<Answer> answers1 = new ArrayList<>();
-        answers1.add(new Answer("You", false));
-        answers1.add(new Answer("Are you", true));
-        answers1.add(new Answer("Am I", false));
-        answers1.add(new Answer("You’re", false));
-        questions.add(new Question("I’m Russian. ___ English?", answers1));
+        try {
+            ClassPathResource resource = new ClassPathResource("questions.json");
+            questions = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {
+            });
+            System.out.println("Loaded questions: " + questions);
+        } catch (IOException e) {
+            log.error("YНе удалось загрузить вопросы для теста", e);
+        }
+        this.questions = questions;
         currentIndex = 0;
         numberCorrectAnswers = 0;
-        this.questions = questions;
     }
 
     public Optional<Question> getNextQuestion() {

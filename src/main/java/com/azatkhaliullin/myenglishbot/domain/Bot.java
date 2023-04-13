@@ -81,7 +81,8 @@ public class Bot extends TelegramLongPollingBot {
 
     public void sendVoice(User recipient,
                           String messageText) {
-        byte[] voiceBytes = awsTranslator.getVoice(ITranslator.Language.EN, messageText);
+        String[] split = messageText.split(",");
+        byte[] voiceBytes = awsTranslator.getVoice(ITranslator.Language.valueOf(split[1]), split[0]);
         InputStream inputStream = new ByteArrayInputStream(voiceBytes);
         InputFile voiceFile = new InputFile()
                 .setMedia(inputStream, messageText);
@@ -126,9 +127,10 @@ public class Bot extends TelegramLongPollingBot {
         }
 
         if (userFromMessage.getDialogueStep() == DialogueStep.WAIT_FOR_TRANSLATION) {
+            ITranslator.Language target = userFromMessage.getTarget();
             String translate = awsTranslator.getTranslate(
                     userFromMessage.getSource(),
-                    userFromMessage.getTarget(),
+                    target,
                     msg.getText());
             List<String> list = List.of("Прослушать перевод");
             sendInlineKeyboard(
@@ -136,7 +138,8 @@ public class Bot extends TelegramLongPollingBot {
                     translate,
                     BotUtility.buildInlineKeyboardMarkup(list
                                     .stream().map(item -> Pair.of(
-                                            item, BotUtility.KeyboardType.VOICE.name() + "/" + translate))
+                                            item, BotUtility.KeyboardType.VOICE.name() + "/" +
+                                                    translate + "," + target))
                                     .collect(Collectors.toList()),
                             1));
             userFromMessage.setDialogueStep(null);
