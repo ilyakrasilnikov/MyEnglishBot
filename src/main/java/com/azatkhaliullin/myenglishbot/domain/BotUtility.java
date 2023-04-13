@@ -25,6 +25,7 @@ public class BotUtility {
         listOfCommands.add(new BotCommand("/start", "get a welcome message"));
         listOfCommands.add(new BotCommand("/help", "info how to use this bot"));
         listOfCommands.add(new BotCommand("/translate", "translate your word"));
+        listOfCommands.add(new BotCommand("/test", "check your english level"));
         try {
             bot.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
@@ -62,7 +63,7 @@ public class BotUtility {
     }
 
     public enum KeyboardType {
-        LANGUAGE, VOICE
+        LANGUAGE, VOICE, TEST
     }
 
 }

@@ -60,7 +60,7 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasCallbackQuery()) {
-            processingCallbackQuery(this, update.getCallbackQuery());
+            processingCallbackQuery(update.getCallbackQuery());
         } else if (update.hasMessage()) {
             processingMessage(update.getMessage());
         }
@@ -91,7 +91,6 @@ public class Bot extends TelegramLongPollingBot {
                 .build();
         try {
             execute(sv);
-            sv.setDisableNotification(true);
         } catch (TelegramApiException e) {
             log.error("Ошибка при отправке голового сообщения", e);
         }
@@ -114,22 +113,13 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    private void processingCallbackQuery(Bot bot,
-                                         CallbackQuery callbackQuery) {
-        org.telegram.telegrambots.meta.api.objects.User userTG = callbackQuery.getFrom();
-        User user = User.convertTGUserToUser(userTG);
-        userRepo.save(user);
-        botCallbackQueryHandler.handleCallback(bot, user, callbackQuery);
+    private void processingCallbackQuery(CallbackQuery callbackQuery) {
+        User user = toUser(callbackQuery.getFrom());
+        botCallbackQueryHandler.handleCallback(this, user, callbackQuery);
     }
 
     private void processingMessage(Message msg) {
-
-        User userFromMessage = User.convertTGUserToUser(msg.getFrom());
-        Optional<User> userFromDbOptional = userRepo.findById(userFromMessage.getId());
-
-        userFromMessage = userRepo.save(userFromDbOptional.isPresent()
-                ? userFromDbOptional.get().toBuilder().username(userFromMessage.getUsername()).build()
-                : userFromMessage);
+        User userFromMessage = toUser(msg.getFrom());
 
         if (botCommandHandler.handleCommand(this, userFromMessage, msg)) {
             return;
@@ -140,11 +130,11 @@ public class Bot extends TelegramLongPollingBot {
                     userFromMessage.getSource(),
                     userFromMessage.getTarget(),
                     msg.getText());
-            List<String> singleton = List.of("Прослушать перевод");
+            List<String> list = List.of("Прослушать перевод");
             sendInlineKeyboard(
                     userFromMessage,
                     translate,
-                    BotUtility.buildInlineKeyboardMarkup(singleton
+                    BotUtility.buildInlineKeyboardMarkup(list
                                     .stream().map(item -> Pair.of(
                                             item, BotUtility.KeyboardType.VOICE.name() + "/" + translate))
                                     .collect(Collectors.toList()),
@@ -154,5 +144,21 @@ public class Bot extends TelegramLongPollingBot {
         } else {
             sendMessage(userFromMessage, msg.getText());
         }
+    }
+
+    private User toUser(org.telegram.telegrambots.meta.api.objects.User userTG) {
+        User userFromMessage = User.builder()
+                .id(userTG.getId())
+                .username(userTG.getUserName())
+                .build();
+        Optional<User> userFromDbOptional = userRepo.findById(userFromMessage.getId());
+        if (userFromDbOptional.isPresent()) {
+            if (userFromDbOptional.get().getUsername().equals(userFromMessage.getUsername())) {
+                return userFromDbOptional.get();
+            } else {
+                return userRepo.save(userFromDbOptional.get().toBuilder().username(userFromMessage.getUsername()).build());
+            }
+        }
+        return userRepo.save(userFromMessage);
     }
 }
