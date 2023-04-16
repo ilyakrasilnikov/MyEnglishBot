@@ -11,6 +11,7 @@ import org.springframework.data.util.Pair;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendVoice;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -66,10 +67,10 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendMessage(User recipient,
+    public void sendMessage(User user,
                             String messageText) {
         SendMessage sm = SendMessage.builder()
-                .chatId(recipient.getId())
+                .chatId(user.getId())
                 .text(messageText)
                 .build();
         try {
@@ -79,15 +80,15 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendVoice(User recipient,
+    public void sendVoice(User user,
                           String messageText) {
-        String[] split = messageText.split(",");
-        byte[] voiceBytes = awsTranslator.getVoice(ITranslator.Language.valueOf(split[1]), split[0]);
+        String[] splitMessage = messageText.split(",");
+        byte[] voiceBytes = awsTranslator.getVoice(ITranslator.Language.valueOf(splitMessage[1]), splitMessage[0]);
         InputStream inputStream = new ByteArrayInputStream(voiceBytes);
         InputFile voiceFile = new InputFile()
                 .setMedia(inputStream, messageText);
         SendVoice sv = SendVoice.builder()
-                .chatId(recipient.getId())
+                .chatId(user.getId())
                 .voice(voiceFile)
                 .build();
         try {
@@ -97,20 +98,39 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    public void sendInlineKeyboard(User recipient,
+    public void sendInlineKeyboard(User user,
                                    String messageText,
                                    List<List<InlineKeyboardButton>> lists) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(lists);
         SendMessage sm = SendMessage.builder()
                 .replyMarkup(inlineKeyboardMarkup)
-                .chatId(recipient.getId())
+                .chatId(user.getId())
                 .text(messageText)
                 .build();
         try {
-            execute(sm);
+            user.setInlineMessageId(execute(sm).getMessageId());
+            userRepo.save(user);
         } catch (TelegramApiException e) {
             log.error("Ошибка при отправке встроенной клавиатуре", e);
+        }
+    }
+
+    public void editMessageWithInline(User user,
+                                      String messageText,
+                                      List<List<InlineKeyboardButton>> lists) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        inlineKeyboardMarkup.setKeyboard(lists);
+        EditMessageText editMessageText = EditMessageText.builder()
+                .replyMarkup(inlineKeyboardMarkup)
+                .chatId(user.getId())
+                .text(messageText)
+                .messageId(user.getInlineMessageId())
+                .build();
+        try {
+            execute(editMessageText);
+        } catch (TelegramApiException e) {
+            log.error("Ошибка при отправке измененнной встроенной клавиатуре", e);
         }
     }
 

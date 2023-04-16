@@ -60,7 +60,8 @@ public class BotCommandHandler {
     private void handleTranslateCommand(Bot bot,
                                         User user) {
         List<String> languagePairs = Language.getLanguagePairs();
-        bot.sendInlineKeyboard(user,
+        bot.sendInlineKeyboard(
+                user,
                 "Выберите языковую пару для перевода",
                 BotUtility.buildInlineKeyboardMarkup(languagePairs
                                 .stream().map(languagePair -> Pair.of(

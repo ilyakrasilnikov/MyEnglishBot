@@ -29,6 +29,7 @@ public class User {
     @OneToOne(fetch = FetchType.EAGER)
     @Cascade(CascadeType.ALL)
     private EnglishTest englishTest;
+    private int InlineMessageId;
 
     public enum DialogueStep {
         WAIT_FOR_TRANSLATION

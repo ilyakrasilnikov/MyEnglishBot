@@ -39,7 +39,6 @@ public class EnglishTest {
             ClassPathResource resource = new ClassPathResource("questions.json");
             questions = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {
             });
-            System.out.println("Loaded questions: " + questions);
         } catch (IOException e) {
             log.error("YНе удалось загрузить вопросы для теста", e);
         }
