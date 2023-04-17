@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.util.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +29,8 @@ public class EnglishTest {
     @Cascade(CascadeType.ALL)
     private final List<Question> questions;
     private int currentIndex;
-    private int numberCorrectAnswers;
+    private int level;
+    private int score;
 
     public EnglishTest() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -40,11 +40,12 @@ public class EnglishTest {
             questions = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {
             });
         } catch (IOException e) {
-            log.error("YНе удалось загрузить вопросы для теста", e);
+            log.error("Не удалось загрузить вопросы для теста", e);
         }
         this.questions = questions;
         currentIndex = 0;
-        numberCorrectAnswers = 0;
+        level = 0;
+        score = 0;
     }
 
     public Optional<Question> getNextQuestion() {
@@ -54,16 +55,30 @@ public class EnglishTest {
         return Optional.of(questions.get(currentIndex));
     }
 
-    public void incrementNumberCorrectAnswers() {
-        numberCorrectAnswers++;
-    }
-
     public void incrementCurrentIndex() {
         currentIndex++;
     }
 
-    public Pair<Integer, Integer> getResult() {
-        return Pair.of(numberCorrectAnswers, questions.size());
+    public void calculateScore() {
+        int[] scoreBoundaries = {6, 14, 29, 39, 50};
+        int[] points = {1, 2, 3, 4, 5};
+        for (int i = 0; i < scoreBoundaries.length; i++) {
+            if (currentIndex <= scoreBoundaries[i]) {
+                score += points[i];
+                break;
+            }
+        }
+    }
+
+    public int calculateLevel() {
+        int[] levelBoundaries = {10, 30, 50, 80, 100, 120, 140, 156, 162};
+        int[] levels = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+        int i = 0;
+        while (score >= levelBoundaries[i]) {
+            i++;
+        }
+        return level = levels[i];
     }
 
 }

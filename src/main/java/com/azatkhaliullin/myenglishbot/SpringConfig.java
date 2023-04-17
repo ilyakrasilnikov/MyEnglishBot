@@ -2,6 +2,7 @@ package com.azatkhaliullin.myenglishbot;
 
 import com.azatkhaliullin.myenglishbot.awsTranslate.AWSTranslator;
 import com.azatkhaliullin.myenglishbot.data.AnswerRepository;
+import com.azatkhaliullin.myenglishbot.data.EnglishLevelRepository;
 import com.azatkhaliullin.myenglishbot.data.EnglishTestRepository;
 import com.azatkhaliullin.myenglishbot.data.UserRepository;
 import com.azatkhaliullin.myenglishbot.domain.Bot;
@@ -47,15 +48,17 @@ public class SpringConfig {
 
     @Bean
     public BotCommandHandler botCommandHandler(UserRepository userRepo,
-                                               EnglishTestRepository englishTestRepo) {
-        return new BotCommandHandler(userRepo, englishTestRepo);
+                                               EnglishTestRepository englishTestRepo,
+                                               EnglishLevelRepository englishLevelRepo) {
+        return new BotCommandHandler(userRepo, englishTestRepo, englishLevelRepo);
     }
 
     @Bean
     public BotCallbackQueryHandler botCallbackQueryHandler(UserRepository userRepo,
                                                            EnglishTestRepository englishTestRepo,
+                                                           EnglishLevelRepository englishLevelRepo,
                                                            AnswerRepository answerRepo) {
-        return new BotCallbackQueryHandler(userRepo, englishTestRepo, answerRepo);
+        return new BotCallbackQueryHandler(userRepo, englishTestRepo, englishLevelRepo, answerRepo);
     }
 
 }
