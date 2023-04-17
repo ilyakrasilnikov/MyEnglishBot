@@ -25,11 +25,5 @@ public class Question {
     @Cascade(CascadeType.ALL)
     private List<Answer> answers;
 
-    public Question(String question,
-                    List<Answer> answers) {
-        this.question = question;
-        this.answers = answers;
-    }
-
 }
 

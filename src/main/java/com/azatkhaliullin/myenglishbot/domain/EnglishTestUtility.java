@@ -1,5 +1,6 @@
 package com.azatkhaliullin.myenglishbot.domain;
 
+import com.azatkhaliullin.myenglishbot.data.EnglishLevelRepository;
 import com.azatkhaliullin.myenglishbot.data.EnglishTestRepository;
 import com.azatkhaliullin.myenglishbot.dto.Answer;
 import com.azatkhaliullin.myenglishbot.dto.Question;
@@ -17,7 +18,8 @@ public class EnglishTestUtility {
 
     public void sendQuestion(Bot bot,
                              User user,
-                             EnglishTestRepository englishTestRepo) {
+                             EnglishTestRepository englishTestRepo,
+                             EnglishLevelRepository englishLevelRepo) {
         EnglishTest englishTest = user.getEnglishTest();
         Optional<Question> optionalQuestion = getNextQuestion(englishTest, englishTestRepo);
         if (optionalQuestion.isPresent()) {
@@ -40,12 +42,12 @@ public class EnglishTestUtility {
                         keyboardMarkup);
             }
         } else {
-            Pair<Integer, Integer> result = englishTest.getResult();
-            bot.sendMessage(user, "Результат: " + result.getFirst() + " из " + result.getSecond());
+            int level = englishTest.calculateLevel();
+            bot.sendMessage(user, englishLevelRepo.getByLevel(level).getDescription());
         }
     }
 
-    public Optional<Question> getNextQuestion(EnglishTest englishTest,
+    private Optional<Question> getNextQuestion(EnglishTest englishTest,
                                               EnglishTestRepository englishTestRepo) {
         Optional<Question> optionalQuestion = englishTest.getNextQuestion();
         englishTestRepo.save(englishTest);
@@ -55,7 +57,7 @@ public class EnglishTestUtility {
     public void checkAnswer(EnglishTest englishTest,
                             Answer answer) {
         if (answer.isRight()) {
-            englishTest.incrementNumberCorrectAnswers();
+            englishTest.calculateScore();
         }
         englishTest.incrementCurrentIndex();
     }

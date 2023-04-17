@@ -2,6 +2,7 @@ package com.azatkhaliullin.myenglishbot.domain;
 
 import com.azatkhaliullin.myenglishbot.awsTranslate.ITranslator.Language;
 import com.azatkhaliullin.myenglishbot.data.AnswerRepository;
+import com.azatkhaliullin.myenglishbot.data.EnglishLevelRepository;
 import com.azatkhaliullin.myenglishbot.data.EnglishTestRepository;
 import com.azatkhaliullin.myenglishbot.data.UserRepository;
 import com.azatkhaliullin.myenglishbot.dto.Answer;
@@ -24,13 +25,16 @@ public class BotCallbackQueryHandler {
     private final Map<KeyboardType, CallbackQueryHandler> callbackQueries;
     private final UserRepository userRepo;
     private final EnglishTestRepository englishTestRepo;
+    private final EnglishLevelRepository englishLevelRepo;
     private final AnswerRepository answerRepo;
 
     public BotCallbackQueryHandler(UserRepository userRepo,
                                    EnglishTestRepository englishTestRepo,
+                                   EnglishLevelRepository englishLevelRepo,
                                    AnswerRepository answerRepo) {
         this.userRepo = userRepo;
         this.englishTestRepo = englishTestRepo;
+        this.englishLevelRepo = englishLevelRepo;
         this.answerRepo = answerRepo;
         callbackQueries = new HashMap<>();
         callbackQueries.put(KeyboardType.LANGUAGE, this::handleTranslateCallback);
@@ -71,7 +75,7 @@ public class BotCallbackQueryHandler {
                                     String[] callbackSplit) {
         Optional<Answer> optionalAnswer = answerRepo.findById(Long.valueOf(callbackSplit[1]));
         optionalAnswer.ifPresent(answer -> EnglishTestUtility.checkAnswer(user.getEnglishTest(), answer));
-        EnglishTestUtility.sendQuestion(bot, user, englishTestRepo);
+        EnglishTestUtility.sendQuestion(bot, user, englishTestRepo, englishLevelRepo);
     }
 
 }
