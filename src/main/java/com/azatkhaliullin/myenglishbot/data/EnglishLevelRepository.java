@@ -7,4 +7,5 @@ public interface EnglishLevelRepository
         extends CrudRepository<EnglishLevel, Long> {
 
     EnglishLevel getByLevel(int level);
+
 }

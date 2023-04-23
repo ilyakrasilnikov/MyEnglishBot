@@ -1,7 +1,7 @@
 package com.azatkhaliullin.myenglishbot.domain;
 
-import com.azatkhaliullin.myenglishbot.awsTranslate.AWSTranslator;
-import com.azatkhaliullin.myenglishbot.awsTranslate.ITranslator;
+import com.azatkhaliullin.myenglishbot.awsTranslate.Aws;
+import com.azatkhaliullin.myenglishbot.awsTranslate.Language;
 import com.azatkhaliullin.myenglishbot.data.UserRepository;
 import com.azatkhaliullin.myenglishbot.dto.BotProperties;
 import com.azatkhaliullin.myenglishbot.dto.User;
@@ -33,18 +33,18 @@ public class Bot extends TelegramLongPollingBot {
     private final BotCommandHandler botCommandHandler;
     private final BotCallbackQueryHandler botCallbackQueryHandler;
     private final UserRepository userRepo;
-    private final AWSTranslator awsTranslator;
+    private final Aws aws;
 
     public Bot(BotProperties botProperties,
                BotCommandHandler botCommandHandler,
                BotCallbackQueryHandler botCallbackQueryHandler,
                UserRepository userRepo,
-               AWSTranslator awsTranslator) {
+               Aws aws) {
         this.botProperties = botProperties;
         this.botCommandHandler = botCommandHandler;
         this.botCallbackQueryHandler = botCallbackQueryHandler;
         this.userRepo = userRepo;
-        this.awsTranslator = awsTranslator;
+        this.aws = aws;
         BotUtility.registerBotCommands(this);
     }
 
@@ -83,7 +83,9 @@ public class Bot extends TelegramLongPollingBot {
     public void sendVoice(User user,
                           String messageText) {
         String[] splitMessage = messageText.split(",");
-        byte[] voiceBytes = awsTranslator.getVoice(ITranslator.Language.valueOf(splitMessage[1]), splitMessage[0]);
+        byte[] voiceBytes = aws.polly(
+                Language.valueOf(splitMessage[1]),
+                splitMessage[0]);
         InputStream inputStream = new ByteArrayInputStream(voiceBytes);
         InputFile voiceFile = new InputFile()
                 .setMedia(inputStream, messageText);
@@ -147,8 +149,8 @@ public class Bot extends TelegramLongPollingBot {
         }
 
         if (userFromMessage.getDialogueStep() == DialogueStep.WAIT_FOR_TRANSLATION) {
-            ITranslator.Language target = userFromMessage.getTarget();
-            String translate = awsTranslator.getTranslate(
+            Language target = userFromMessage.getTarget();
+            String translate = aws.translate(
                     userFromMessage.getSource(),
                     target,
                     msg.getText());

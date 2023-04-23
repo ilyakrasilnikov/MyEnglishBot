@@ -73,7 +73,6 @@ public class EnglishTest {
     public int calculateLevel() {
         int[] levelBoundaries = {10, 30, 50, 80, 100, 120, 140, 156, 162};
         int[] levels = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-
         int i = 0;
         while (score >= levelBoundaries[i]) {
             i++;

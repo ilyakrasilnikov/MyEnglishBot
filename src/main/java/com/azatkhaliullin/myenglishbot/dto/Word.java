@@ -1,6 +1,6 @@
 package com.azatkhaliullin.myenglishbot.dto;
 
-import com.azatkhaliullin.myenglishbot.awsTranslate.ITranslator.Language;
+import com.azatkhaliullin.myenglishbot.awsTranslate.Language;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;

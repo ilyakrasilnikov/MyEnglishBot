@@ -1,6 +1,6 @@
 package com.azatkhaliullin.myenglishbot;
 
-import com.azatkhaliullin.myenglishbot.awsTranslate.AWSTranslator;
+import com.azatkhaliullin.myenglishbot.awsTranslate.Aws;
 import com.azatkhaliullin.myenglishbot.data.AnswerRepository;
 import com.azatkhaliullin.myenglishbot.data.EnglishLevelRepository;
 import com.azatkhaliullin.myenglishbot.data.EnglishTestRepository;
@@ -12,9 +12,6 @@ import com.azatkhaliullin.myenglishbot.dto.BotProperties;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-
 @SpringBootConfiguration
 public class SpringConfig {
 
@@ -23,12 +20,12 @@ public class SpringConfig {
                    BotCommandHandler botCommandHandler,
                    BotCallbackQueryHandler botCallbackQueryHandler,
                    UserRepository userRepo,
-                   AWSTranslator awsTranslator) {
+                   Aws aws) {
         return new Bot(botProperties,
                 botCommandHandler,
                 botCallbackQueryHandler,
                 userRepo,
-                awsTranslator);
+                aws);
     }
 
     @Bean
@@ -37,13 +34,8 @@ public class SpringConfig {
     }
 
     @Bean
-    public AWSTranslator awsTranslator(ThreadPoolExecutor threadPoolExecutor) {
-        return new AWSTranslator(threadPoolExecutor);
-    }
-
-    @Bean
-    public ThreadPoolExecutor threadPoolExecutor() {
-        return (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+    public Aws awsTranslator() {
+        return new Aws();
     }
 
     @Bean

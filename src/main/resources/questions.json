@@ -1,6 +1,6 @@
 [
   {
-    "question": "1. George is French. ... a French boy.",
+    "question": "1. George is French. ___ a French boy.",
     "answers": [
       {"value": "It is", "right": false},
       {"value": "She is", "right": false},
@@ -27,7 +27,7 @@
     ]
   },
   {
-    "question": "4. I speak Italian. She ... Japanese.",
+    "question": "4. I speak Italian. She ___ Japanese.",
     "answers": [
       {"value": "does speak", "right": false},
       {"value": "speaking", "right": false},
@@ -36,7 +36,7 @@
     ]
   },
   {
-    "question": "5. «What ...?» «I'm a student.»",
+    "question": "5. «What ___ ?» «I'm a student.»",
     "answers": [
       {"value": "do you", "right": false},
       {"value": "do you do", "right": true},
@@ -45,7 +45,7 @@
     ]
   },
   {
-    "question": "6. Sorry, I ... understand.",
+    "question": "6. Sorry, I ___ understand.",
     "answers": [
       {"value": "am not", "right": false},
       {"value": "not", "right": false},
@@ -54,7 +54,7 @@
     ]
   },
   {
-    "question": "7. « ... I have a table for two please?» «Sure.»",
+    "question": "7. « ___ I have a table for two please?» «Sure.»",
     "answers": [
       {"value": "Would", "right": false},
       {"value": "Must", "right": false},
@@ -63,7 +63,7 @@
     ]
   },
   {
-    "question": "8. Where ... now?",
+    "question": "8. Where ___ now?",
     "answers": [
       {"value": "she is studying", "right": false},
       {"value": "is she studying", "right": true},
@@ -72,7 +72,7 @@
     ]
   },
   {
-    "question": "9. That isn't your umbrella. It's ....",
+    "question": "9. That isn't your umbrella. It's ___ .",
     "answers": [
       {"value": "they", "right": false},
       {"value": "my", "right": false},
@@ -81,7 +81,7 @@
     ]
   },
   {
-    "question": "10. Look at that cloud. It ... rain.",
+    "question": "10. Look at that cloud. It ___ rain.",
     "answers": [
       {"value": "is", "right": false},
       {"value": "does", "right": false},
@@ -90,7 +90,7 @@
     ]
   },
   {
-    "question": "11. No, I don't want ... carrots.",
+    "question": "11. No, I don't want ___ carrots.",
     "answers": [
       {"value": "some", "right": false},
       {"value": "a", "right": false},
@@ -99,7 +99,7 @@
     ]
   },
   {
-    "question": "12. «Where ... at the weekend?» «I was in the country.»",
+    "question": "12. «Where ___ at the weekend?» «I was in the country.»",
     "answers": [
       {"value": "you were", "right": false},
       {"value": "were you", "right": true},
@@ -108,7 +108,7 @@
     ]
   },
   {
-    "question": "13. «Why not go to Madame Tussauds?» «I ... there yesterday»",
+    "question": "13. «Why not go to Madame Tussauds?» «I ___ there yesterday»",
     "answers": [
       {"value": "went", "right": true},
       {"value": "go", "right": false},
@@ -117,7 +117,7 @@
     ]
   },
   {
-    "question": "14. «Where ... you yesterday?» «I didn't go anywhere.»",
+    "question": "14. «Where ___ you yesterday?» «I didn't go anywhere.»",
     "answers": [
       {"value": "went you", "right": false},
       {"value": "did you went", "right": false},
@@ -126,7 +126,7 @@
     ]
   },
   {
-    "question": "15. You ... work hard to pass the examination.",
+    "question": "15. You ___ work hard to pass the examination.",
     "answers": [
       {"value": "have to", "right": true},
       {"value": "can", "right": false},
@@ -135,7 +135,7 @@
     ]
   },
   {
-    "question": "16. His English is very good. He speaks Italian ..., too.",
+    "question": "16. His English is very good. He speaks Italian ___ , too.",
     "answers": [
       {"value": "badly", "right": false},
       {"value": "bad", "right": false},
@@ -144,7 +144,7 @@
     ]
   },
   {
-    "question": "17. I ... to Spain.",
+    "question": "17. I ___ to Spain.",
     "answers": [
       {"value": "never been", "right": false},
       {"value": "never was", "right": false},
@@ -153,7 +153,7 @@
     ]
   },
   {
-    "question": "18. Jane... the tickets.",
+    "question": "18. Jane ___ the tickets.",
     "answers": [
       {"value": "has already bought", "right": true},
       {"value": "already bought", "right": false},
@@ -162,7 +162,7 @@
     ]
   },
   {
-    "question": "19. Don't go out. It ... rain.",
+    "question": "19. Don't go out. It ___ rain.",
     "answers": [
       {"value": "should", "right": false},
       {"value": "might", "right": true},
@@ -171,7 +171,7 @@
     ]
   },
   {
-    "question": "20. Freddy ... with a girl when I saw him.",
+    "question": "20. Freddy ___ with a girl when I saw him.",
     "answers": [
       {"value": "speak", "right": false},
       {"value": "speaking", "right": false},
@@ -180,7 +180,7 @@
     ]
   },
   {
-    "question": "21. My cousin ... for my birthday.",
+    "question": "21. My cousin ___ for my birthday.",
     "answers": [
       {"value": "gave me a camera", "right": true},
       {"value": "gave to me a camera", "right": false},
@@ -189,7 +189,7 @@
     ]
   },
   {
-    "question": "22. The woman ... came yesterday is very rich.",
+    "question": "22. The woman ___ came yesterday is very rich.",
     "answers": [
       {"value": "she", "right": false},
       {"value": "who", "right": true},
@@ -198,7 +198,7 @@
     ]
   },
   {
-    "question": "23. Tom is good at football but John is ... .",
+    "question": "23. Tom is good at football but John is ___ .",
     "answers": [
       {"value": "gooder", "right": false},
       {"value": "well", "right": false},
@@ -207,7 +207,7 @@
     ]
   },
   {
-    "question": "24. Mary... since she left school.",
+    "question": "24. Mary ___ since she left school.",
     "answers": [
       {"value": "was working", "right": false},
       {"value": "works", "right": false},
@@ -216,7 +216,7 @@
     ]
   },
   {
-    "question": "25. «Please be patient.» He told me ... .",
+    "question": "25. «Please be patient.» He told me ___ .",
     "answers": [
       {"value": "to be patient", "right": true},
       {"value": "be patient", "right": false},
@@ -225,7 +225,7 @@
     ]
   },
   {
-    "question": "26. «I'm a shop assistant.» She told me that ... a shop assistant.",
+    "question": "26. «I'm a shop assistant.» She told me that ___ a shop assistant.",
     "answers": [
       {"value": "I was", "right": false},
       {"value": "I am", "right": false},
@@ -234,7 +234,7 @@
     ]
   },
   {
-    "question": "27. Annabel will come to tea if you ... her.",
+    "question": "27. Annabel will come to tea if you ___ her.",
     "answers": [
       {"value": "asks", "right": false},
       {"value": "ask", "right": true},
@@ -243,7 +243,7 @@
     ]
   },
   {
-    "question": "28. I am not as fast as you. You are ... than I am.",
+    "question": "28. I am not as fast as you. You are ___ than I am.",
     "answers": [
       {"value": "as fast", "right": false},
       {"value": "faster", "right": true},
@@ -252,7 +252,7 @@
     ]
   },
   {
-    "question": "29. «...Gone with the Wind?» «Yes, I saw it on Saturday.»",
+    "question": "29. « ___ Gone with the Wind?» «Yes, I saw it on Saturday.»",
     "answers": [
       {"value": "Did you see", "right": false},
       {"value": "Have you seen", "right": true},
@@ -261,7 +261,7 @@
     ]
   },
   {
-    "question": "30. When I was a child I ... a lot of chocolate.",
+    "question": "30. When I was a child I ___ a lot of chocolate.",
     "answers": [
       {"value": "use eat", "right": false},
       {"value": "eat", "right": false},
@@ -270,7 +270,7 @@
     ]
   },
   {
-    "question": "31. The school ... last year.",
+    "question": "31. The school ___ last year.",
     "answers": [
       {"value": "was built", "right": true},
       {"value": "has built", "right": false},
@@ -279,7 +279,7 @@
     ]
   },
   {
-    "question": "32. Mary enjoys ... in Dublin.",
+    "question": "32. Mary enjoys ___ in Dublin.",
     "answers": [
       {"value": "living", "right": true},
       {"value": "to live", "right": false},
@@ -288,7 +288,7 @@
     ]
   },
   {
-    "question": "33. I think you'd better ... to the doctor.",
+    "question": "33. I think you'd better ___ to the doctor.",
     "answers": [
       {"value": "to go", "right": false},
       {"value": "go", "right": true},
@@ -297,7 +297,7 @@
     ]
   },
   {
-    "question": "34. Dinner will be ready for you when you ... home.",
+    "question": "34. Dinner will be ready for you when you ___ home.",
     "answers": [
       {"value": "gets", "right": false},
       {"value": "get", "right": true},
@@ -306,7 +306,7 @@
     ]
   },
   {
-    "question": "35. If I were you, ...this dress.",
+    "question": "35. If I were you, ___ this dress.",
     "answers": [
       {"value": "I'd buy", "right": true},
       {"value": "I buy", "right": false},
@@ -315,7 +315,7 @@
     ]
   },
   {
-    "question": "36. «Have you washed the dishes?» Mum asked me ... washed the dishes.",
+    "question": "36. «Have you washed the dishes?» Mum asked me ___ washed the dishes.",
     "answers": [
       {"value": "have I", "right": false},
       {"value": "if I have", "right": true},
@@ -324,7 +324,7 @@
     ]
   },
   {
-    "question": "37. They ... so much they could hardly move.",
+    "question": "37. They ___ so much they could hardly move.",
     "answers": [
       {"value": "eating", "right": false},
       {"value": "had eaten", "right": true},
@@ -333,7 +333,7 @@
     ]
   },
   {
-    "question": "38. I like her. She makes me ...",
+    "question": "38. I like her. She makes me ___ .",
     "answers": [
       {"value": "laughing", "right": false},
       {"value": "laughter", "right": false},
@@ -342,7 +342,7 @@
     ]
   },
   {
-    "question": "39. Would you mind ... me a pencil, please?",
+    "question": "39. Would you mind ___ me a pencil, please?",
     "answers": [
       {"value": "give", "right": false},
       {"value": "giving", "right": true},
@@ -351,7 +351,7 @@
     ]
   },
   {
-    "question": "40. What about ... to the movies tonight?",
+    "question": "40. What about ___ to the movies tonight?",
     "answers": [
       {"value": "go", "right": false},
       {"value": "to go", "right": false},
@@ -360,7 +360,7 @@
     ]
   },
   {
-    "question": "41. I ... here for 7 days in June.",
+    "question": "41. I ___ here for 7 days in June.",
     "answers": [
       {"value": "will be", "right": true},
       {"value": "will", "right": false},
@@ -369,7 +369,7 @@
     ]
   },
   {
-    "question": "42. I wish I ... a lot of money.",
+    "question": "42. I wish I ___ a lot of money.",
     "answers": [
       {"value": "had", "right": true},
       {"value": "have", "right": false},
@@ -378,7 +378,7 @@
     ]
   },
   {
-    "question": "43. His car is rather dirty. He .... it before he took us for a ride.",
+    "question": "43. His car is rather dirty. He ___ it before he took us for a ride.",
     "answers": [
       {"value": "had washed", "right": false},
       {"value": "has washed", "right": false},
@@ -387,7 +387,7 @@
     ]
   },
   {
-    "question": "44. If you ... gone to the party you would have seen her.",
+    "question": "44. If you ___ gone to the party you would have seen her.",
     "answers": [
       {"value": "had", "right": true},
       {"value": "would have", "right": false},
@@ -396,7 +396,7 @@
     ]
   },
   {
-    "question": "45. «Where is Trafalgar Square?» She asked me where ... .",
+    "question": "45. «Where is Trafalgar Square?» She asked me where ___ .",
     "answers": [
       {"value": "Trafalgar Square was", "right": true},
       {"value": "is Trafalgar Square", "right": false},
@@ -405,7 +405,7 @@
     ]
   },
   {
-    "question": "46. The streets are wet. It ... raining.",
+    "question": "46. The streets are wet. It ___ raining.",
     "answers": [
       {"value": "must have", "right": false},
       {"value": "must have been", "right": true},
@@ -414,16 +414,16 @@
     ]
   },
   {
-    "question": "47. He doesn't have time to tile his kitchen himself, so he is ....",
+    "question": "47. He doesn't have time to tile his kitchen himself, so he is having ___ .",
     "answers": [
-      {"value": "being tiled the kitchen", "right": false},
-      {"value": "having the kitchen tiled", "right": true},
-      {"value": "going to tile the kitchen", "right": false},
-      {"value": "having tiled the kitchen", "right": false}
+      {"value": "tiled the kitchen", "right": false},
+      {"value": "the kitchen tiled", "right": true},
+      {"value": "to tile the kitchen", "right": false},
+      {"value": "tiled the kitchen", "right": false}
     ]
   },
   {
-    "question": "48. I'd rather you ... later. I'm all tied up.",
+    "question": "48. I'd rather you ___ later. I'm all tied up.",
     "answers": [
       {"value": "would call back", "right": false},
       {"value": "will call back", "right": false},
@@ -432,7 +432,7 @@
     ]
   },
   {
-    "question": "49. If you ... there again, what would you do?",
+    "question": "49. If you ___ there again, what would you do?",
     "answers": [
       {"value": "will go", "right": false},
       {"value": "went", "right": true},
@@ -441,7 +441,7 @@
     ]
   },
   {
-    "question": "50. «Can I phone you at 7.00?» «No, it's too early. I ... then.»",
+    "question": "50. «Can I phone you at 7.00?» «No, it's too early. I ___ then.»",
     "answers": [
       {"value": "would sleep", "right": false},
       {"value": "shall have slept", "right": false},
