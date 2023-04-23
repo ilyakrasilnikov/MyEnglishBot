@@ -1,6 +1,6 @@
 package com.azatkhaliullin.myenglishbot;
 
-import com.azatkhaliullin.myenglishbot.awsTranslate.Aws;
+import com.azatkhaliullin.myenglishbot.aws.Aws;
 import com.azatkhaliullin.myenglishbot.data.AnswerRepository;
 import com.azatkhaliullin.myenglishbot.data.EnglishLevelRepository;
 import com.azatkhaliullin.myenglishbot.data.EnglishTestRepository;

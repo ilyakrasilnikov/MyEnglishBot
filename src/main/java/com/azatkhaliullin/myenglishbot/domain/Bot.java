@@ -1,7 +1,7 @@
 package com.azatkhaliullin.myenglishbot.domain;
 
-import com.azatkhaliullin.myenglishbot.awsTranslate.Aws;
-import com.azatkhaliullin.myenglishbot.awsTranslate.Language;
+import com.azatkhaliullin.myenglishbot.aws.Aws;
+import com.azatkhaliullin.myenglishbot.aws.Language;
 import com.azatkhaliullin.myenglishbot.data.UserRepository;
 import com.azatkhaliullin.myenglishbot.dto.BotProperties;
 import com.azatkhaliullin.myenglishbot.dto.User;

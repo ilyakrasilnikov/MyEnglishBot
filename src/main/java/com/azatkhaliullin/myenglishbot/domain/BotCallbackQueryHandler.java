@@ -1,6 +1,6 @@
 package com.azatkhaliullin.myenglishbot.domain;
 
-import com.azatkhaliullin.myenglishbot.awsTranslate.Language;
+import com.azatkhaliullin.myenglishbot.aws.Language;
 import com.azatkhaliullin.myenglishbot.data.AnswerRepository;
 import com.azatkhaliullin.myenglishbot.data.EnglishLevelRepository;
 import com.azatkhaliullin.myenglishbot.data.EnglishTestRepository;

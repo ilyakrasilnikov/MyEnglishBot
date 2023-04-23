@@ -1,4 +1,4 @@
-package com.azatkhaliullin.myenglishbot.awsTranslate;
+package com.azatkhaliullin.myenglishbot.aws;
 
 import java.util.Arrays;
 import java.util.List;

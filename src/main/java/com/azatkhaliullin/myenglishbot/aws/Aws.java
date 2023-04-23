@@ -1,4 +1,4 @@
-package com.azatkhaliullin.myenglishbot.awsTranslate;
+package com.azatkhaliullin.myenglishbot.aws;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 public class Aws {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private static final String BASE_URL = "http://ec2-107-22-127-7.compute-1.amazonaws.com/";
+    private static final String BASE_URL = "http://ec2-34-201-216-252.compute-1.amazonaws.com/";
 
     public String translate(Language source,
                             Language target,

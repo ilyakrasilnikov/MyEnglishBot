@@ -1,7 +1,7 @@
 package com.azatkhaliullin.myenglishbot.dto;
 
 import com.azatkhaliullin.myenglishbot.domain.EnglishTest;
-import com.azatkhaliullin.myenglishbot.awsTranslate.Language;
+import com.azatkhaliullin.myenglishbot.aws.Language;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
