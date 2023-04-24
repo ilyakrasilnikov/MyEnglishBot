@@ -23,5 +23,4 @@ public class MyEnglishBotApplication {
         }
     }
 //TODO Заполнение таблицы уровней английского
-//TODO Удалять старый тест при создание нового
 }

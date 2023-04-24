@@ -2,13 +2,12 @@ package com.azatkhaliullin.myenglishbot.dto;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import java.util.List;
 
@@ -21,8 +20,7 @@ public class Question {
     @GeneratedValue
     private Long id;
     private String question;
-    @OneToMany(fetch = FetchType.EAGER)
-    @Cascade(CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Answer> answers;
 
 }

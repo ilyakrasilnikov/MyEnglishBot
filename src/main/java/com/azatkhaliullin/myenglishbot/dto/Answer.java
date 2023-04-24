@@ -19,9 +19,4 @@ public class Answer {
     private String value;
     private boolean isRight;
 
-    public Answer(String value,
-                  boolean isRight) {
-        this.value = value;
-        this.isRight = isRight;
-    }
 }

@@ -5,13 +5,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
@@ -27,10 +27,10 @@ public class EnglishTest {
     @Id
     @GeneratedValue
     private Long id;
-    @OneToMany(fetch = FetchType.EAGER)
-    @Cascade(CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private final List<Question> questions;
     private int currentIndex;
+    @Transient
     private int level;
     private int score;
 

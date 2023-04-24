@@ -2,6 +2,7 @@ package com.azatkhaliullin.myenglishbot.dto;
 
 import com.azatkhaliullin.myenglishbot.domain.EnglishTest;
 import com.azatkhaliullin.myenglishbot.aws.Language;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -10,8 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 @Entity
 @Data
@@ -26,8 +25,7 @@ public class User {
     private DialogueStep dialogueStep;
     private Language source;
     private Language target;
-    @OneToOne(fetch = FetchType.EAGER)
-    @Cascade(CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private EnglishTest englishTest;
     private int InlineMessageId;
 

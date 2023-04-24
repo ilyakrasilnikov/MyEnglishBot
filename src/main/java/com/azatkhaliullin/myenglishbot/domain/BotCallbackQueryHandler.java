@@ -55,11 +55,9 @@ public class BotCallbackQueryHandler {
                                          User user,
                                          String[] callbackSplit) {
         String[] split = callbackSplit[1].split("_");
-        Language source = Language.valueOf(split[0]);
-        Language target = Language.valueOf(split[1]);
+        user.setSource(Language.valueOf(split[0]));
+        user.setTarget(Language.valueOf(split[1]));
         user.setDialogueStep(User.DialogueStep.WAIT_FOR_TRANSLATION);
-        user.setSource(source);
-        user.setTarget(target);
         userRepo.save(user);
         bot.sendMessage(user, "Введите слово либо фразу для перевода");
     }
@@ -68,7 +66,6 @@ public class BotCallbackQueryHandler {
                                      User user,
                                      String[] callbackSplit) {
         bot.sendVoice(user, callbackSplit[1]);
-
     }
 
     private void handleTestCallback(Bot bot,
@@ -77,17 +74,13 @@ public class BotCallbackQueryHandler {
         switch (callbackSplit[1]) {
             case "0" -> {
                 if (user.getEnglishTest() == null) {
-                    EnglishTest englishTest = new EnglishTest();
-                    user.setEnglishTest(englishTest);
+                    user.setEnglishTest(new EnglishTest());
                     user = userRepo.save(user);
                 }
                 EnglishTestUtility.sendQuestion(bot, user, englishTestRepo, englishLevelRepo);
             }
             case "1" -> {
-                user.setEnglishTest(null);
-                englishTestRepo.delete(user.getEnglishTest());
-                EnglishTest test = new EnglishTest();
-                user.setEnglishTest(test);
+                user.setEnglishTest(new EnglishTest());
                 user = userRepo.save(user);
                 EnglishTestUtility.sendQuestion(bot, user, englishTestRepo, englishLevelRepo);
             }
