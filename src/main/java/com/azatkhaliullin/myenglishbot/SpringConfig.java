@@ -39,10 +39,8 @@ public class SpringConfig {
     }
 
     @Bean
-    public BotCommandHandler botCommandHandler(UserRepository userRepo,
-                                               EnglishTestRepository englishTestRepo,
-                                               EnglishLevelRepository englishLevelRepo) {
-        return new BotCommandHandler(userRepo, englishTestRepo, englishLevelRepo);
+    public BotCommandHandler botCommandHandler() {
+        return new BotCommandHandler();
     }
 
     @Bean

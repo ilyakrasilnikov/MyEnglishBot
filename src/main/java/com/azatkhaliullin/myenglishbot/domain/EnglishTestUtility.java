@@ -27,7 +27,7 @@ public class EnglishTestUtility {
             List<Answer> answers = question.getAnswers();
             List<List<InlineKeyboardButton>> keyboardMarkup = BotUtility.buildInlineKeyboardMarkup(answers
                             .stream().map(answer -> Pair.of(
-                                    answer.getValue(), BotUtility.KeyboardType.TEST.name() + "/" + answer.getId()))
+                                    answer.getValue(), BotUtility.KeyboardType.ANSWERS.name() + "/" + answer.getId()))
                             .collect(Collectors.toList()),
                     2);
             if (user.getInlineMessageId() == 0) {
@@ -42,13 +42,12 @@ public class EnglishTestUtility {
                         keyboardMarkup);
             }
         } else {
-            int level = englishTest.calculateLevel();
-            bot.sendMessage(user, englishLevelRepo.getByLevel(level).getDescription());
+            sendResult(bot, user, englishTest, englishLevelRepo);
         }
     }
 
     private Optional<Question> getNextQuestion(EnglishTest englishTest,
-                                              EnglishTestRepository englishTestRepo) {
+                                               EnglishTestRepository englishTestRepo) {
         Optional<Question> optionalQuestion = englishTest.getNextQuestion();
         englishTestRepo.save(englishTest);
         return optionalQuestion;
@@ -61,5 +60,17 @@ public class EnglishTestUtility {
         }
         englishTest.incrementCurrentIndex();
     }
+
+    public void sendResult(Bot bot,
+                           User user,
+                           EnglishTest englishTest,
+                           EnglishLevelRepository englishLevelRepo) {
+        int level = englishTest.calculateLevel();
+        String message = String.format("У вас %d баллов из 162.%n%n%s",
+                englishTest.getScore(),
+                englishLevelRepo.getByLevel(level).getDescription());
+        bot.sendMessage(user, message);
+    }
+
 
 }

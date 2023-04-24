@@ -1,13 +1,11 @@
 package com.azatkhaliullin.myenglishbot.domain;
 
 import com.azatkhaliullin.myenglishbot.aws.Language;
-import com.azatkhaliullin.myenglishbot.data.EnglishLevelRepository;
-import com.azatkhaliullin.myenglishbot.data.EnglishTestRepository;
-import com.azatkhaliullin.myenglishbot.data.UserRepository;
 import com.azatkhaliullin.myenglishbot.dto.User;
 import org.springframework.data.util.Pair;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,17 +18,10 @@ interface CommandHandler {
 }
 
 public class BotCommandHandler {
-    private final Map<String, CommandHandler> commands;
-    private final UserRepository userRepo;
-    private final EnglishTestRepository englishTestRepo;
-    private final EnglishLevelRepository englishLevelRepo;
 
-    public BotCommandHandler(UserRepository userRepo,
-                             EnglishTestRepository englishTestRepo,
-                             EnglishLevelRepository englishLevelRepo) {
-        this.userRepo = userRepo;
-        this.englishTestRepo = englishTestRepo;
-        this.englishLevelRepo = englishLevelRepo;
+    private final Map<String, CommandHandler> commands;
+
+    public BotCommandHandler() {
         commands = new HashMap<>();
         commands.put("/start", this::handleStartCommand);
         commands.put("/help", this::handleHelpCommand);
@@ -76,12 +67,19 @@ public class BotCommandHandler {
 
     private void handleTestCommand(Bot bot,
                                    User user) {
-        if (user.getEnglishTest() == null) {
-            EnglishTest test = new EnglishTest();
-            user.setEnglishTest(test);
-            user = userRepo.save(user);
-        }
-        EnglishTestUtility.sendQuestion(bot, user, englishTestRepo, englishLevelRepo);
+        List<String> valueButtons = new ArrayList<>();
+        valueButtons.add("Начать/Продолжить тест");
+        valueButtons.add("Пройти тест заново");
+        valueButtons.add("Результаты теста");
+        bot.sendInlineKeyboard(
+                user,
+                "Выберите дальнейшее действие",
+                BotUtility.buildInlineKeyboardMarkup(valueButtons
+                                .stream().map(valueButton -> Pair.of(
+                                        valueButton, BotUtility.KeyboardType.TEST.name() + "/" + valueButtons.indexOf(valueButton)))
+                                .collect(Collectors.toList()),
+                        1));
     }
+
 }
 

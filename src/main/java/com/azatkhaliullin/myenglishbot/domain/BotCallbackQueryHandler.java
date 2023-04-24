@@ -40,6 +40,7 @@ public class BotCallbackQueryHandler {
         callbackQueries.put(KeyboardType.LANGUAGE, this::handleTranslateCallback);
         callbackQueries.put(KeyboardType.VOICE, this::handleVoiceCallback);
         callbackQueries.put(KeyboardType.TEST, this::handleTestCallback);
+        callbackQueries.put(KeyboardType.ANSWERS, this::handleAnswersCallback);
     }
 
     public void handleCallback(Bot bot,
@@ -73,6 +74,33 @@ public class BotCallbackQueryHandler {
     private void handleTestCallback(Bot bot,
                                     User user,
                                     String[] callbackSplit) {
+        switch (callbackSplit[1]) {
+            case "0" -> {
+                if (user.getEnglishTest() == null) {
+                    EnglishTest englishTest = new EnglishTest();
+                    user.setEnglishTest(englishTest);
+                    user = userRepo.save(user);
+                }
+                EnglishTestUtility.sendQuestion(bot, user, englishTestRepo, englishLevelRepo);
+            }
+            case "1" -> {
+                user.setEnglishTest(null);
+                englishTestRepo.delete(user.getEnglishTest());
+                EnglishTest test = new EnglishTest();
+                user.setEnglishTest(test);
+                user = userRepo.save(user);
+                EnglishTestUtility.sendQuestion(bot, user, englishTestRepo, englishLevelRepo);
+            }
+            case "2" -> {
+                EnglishTest englishTest = user.getEnglishTest();
+                EnglishTestUtility.sendResult(bot, user, englishTest, englishLevelRepo);
+            }
+        }
+    }
+
+    private void handleAnswersCallback(Bot bot,
+                                       User user,
+                                       String[] callbackSplit) {
         Optional<Answer> optionalAnswer = answerRepo.findById(Long.valueOf(callbackSplit[1]));
         optionalAnswer.ifPresent(answer -> EnglishTestUtility.checkAnswer(user.getEnglishTest(), answer));
         EnglishTestUtility.sendQuestion(bot, user, englishTestRepo, englishLevelRepo);
