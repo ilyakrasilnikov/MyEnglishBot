@@ -1,4 +1,6 @@
 package com.azatkhaliullin.myenglishbot.domain;
+// В этом пакете лежат не домены. Домен - это верхний уровень какой-либо иерархии.
+// Встречался и использованием этого понятия применительно к url и базовым типам данных, от которых формируются другие типы данных
 
 import com.azatkhaliullin.myenglishbot.aws.Aws;
 import com.azatkhaliullin.myenglishbot.aws.Language;
@@ -107,7 +109,8 @@ public class Bot extends TelegramLongPollingBot {
                           String messageText) {
         String[] splitMessage = messageText.split(",");
         byte[] voiceBytes = aws.polly(
-                Language.valueOf(splitMessage[1]),
+                Language.valueOf(splitMessage[1]), // не обрабатывается кейс, если в splitMessage не окажется 0 и/или 1 элемента
+                // это может оказаться важным, так как сам метод - void, исключений не бросает, сложно будет понять отправилось ли сообщение пользователю там, откуда был вызван этот метод
                 splitMessage[0]);
         InputStream inputStream = new ByteArrayInputStream(voiceBytes);
         InputFile voiceFile = new InputFile()
@@ -130,9 +133,9 @@ public class Bot extends TelegramLongPollingBot {
      * @param messageText the text of the message to send.
      * @param lists       a list of lists of inline keyboard buttons to display.
      */
-    public void sendInlineKeyboard(User user,
-                                   String messageText,
-                                   List<List<InlineKeyboardButton>> lists) {
+    void sendInlineKeyboard(User user, //здесь и везде: нужно хорошенько проверить все методы на уровень доступа, многие из них выглядят как сильно внутренние, но при этом они public
+                            String messageText,
+                            List<List<InlineKeyboardButton>> lists) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(lists);
         SendMessage sm = SendMessage.builder()
@@ -210,7 +213,7 @@ public class Bot extends TelegramLongPollingBot {
                                             item, BotUtility.InlineKeyboardType.VOICE.name() + "/" +
                                                     translate + "," + target))
                                     .collect(Collectors.toList()),
-                            1));
+                            1)); // возможно, стоит вынести в константы или в настройки
             userFromMessage.setDialogueStep(null);
             userRepo.save(userFromMessage);
         } else {

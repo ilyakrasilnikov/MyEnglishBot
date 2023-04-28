@@ -27,7 +27,7 @@ public class User {
     private Language target;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private EnglishTest englishTest;
-    private int InlineMessageId;
+    private int inlineMessageId;
 
     public enum DialogueStep {
         WAIT_FOR_TRANSLATION

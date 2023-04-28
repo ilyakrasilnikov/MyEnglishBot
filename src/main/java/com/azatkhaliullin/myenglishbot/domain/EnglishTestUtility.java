@@ -108,7 +108,7 @@ public class EnglishTestUtility {
         if (englishTest != null) {
             // Calculate the final score and level.
             int level = englishTest.calculateLevel();
-            String message = String.format("У вас %d баллов из 162.%n%n%s",
+            String message = String.format("У вас %d баллов из 162.%n%n%s", // велика вероятность забыть поменять это число в случае, если алгоритм подсчёта баллов изменится, лучше вынести 162 в константы класса EnglishTest или высчитывать её динамически на основе банка текущих вопросов и цены оответов на них в том же классе
                     englishTest.getScore(),
                     englishLevelRepo.getByLevel(level).getDescription());
             bot.sendMessage(user, message);

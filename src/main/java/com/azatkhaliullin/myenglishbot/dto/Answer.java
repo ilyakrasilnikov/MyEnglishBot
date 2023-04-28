@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@AllArgsConstructor
+@AllArgsConstructor // точно нужен?
 @NoArgsConstructor
 public class Answer {
 

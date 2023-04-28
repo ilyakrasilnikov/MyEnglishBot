@@ -9,11 +9,11 @@ import com.azatkhaliullin.myenglishbot.domain.Bot;
 import com.azatkhaliullin.myenglishbot.domain.BotCallbackQueryHandler;
 import com.azatkhaliullin.myenglishbot.domain.BotCommandHandler;
 import com.azatkhaliullin.myenglishbot.dto.BotProperties;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
-@SpringBootConfiguration
+@Configuration
 public class SpringConfig {
 
     @Bean

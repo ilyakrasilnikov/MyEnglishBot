@@ -1,11 +1,12 @@
 package com.azatkhaliullin.myenglishbot.dto;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+//@Data
+@Getter
 public class BotProperties {
 
-    private String username = System.getenv("BOT_USERNAME");
-    private String token = System.getenv("BOT_TOKEN");
+    private final String username = System.getenv("BOT_USERNAME");
+    private final String token = System.getenv("BOT_TOKEN");
 
 }

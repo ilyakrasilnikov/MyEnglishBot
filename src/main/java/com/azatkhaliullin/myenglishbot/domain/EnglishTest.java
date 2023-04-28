@@ -69,7 +69,7 @@ public class EnglishTest {
     /**
      * Increments the current index to move to the next question.
      */
-    public void incrementCurrentIndex() {
+    void incrementCurrentIndex() { // здесь и везде проверить уровень доступа к методам
         currentIndex++;
     }
 
@@ -96,7 +96,8 @@ public class EnglishTest {
         int[] levelBoundaries = {10, 30, 50, 80, 100, 120, 140, 156, 162};
         int[] levels = {1, 2, 3, 4, 5, 6, 7, 8, 9};
         int i = 0;
-        while (score >= levelBoundaries[i]) {
+        while (score >= levelBoundaries[i]) { // если score окажется > 162, уйдём в бесконечность, лучше перебрать levelBoundaries for-ом по длине этого массива или использовать stream()
+            // учитывая, что score подсчитывается снаружи этого метода, лучше подстраховаться
             i++;
         }
         return level = levels[i];

@@ -118,7 +118,9 @@ public class BotCallbackQueryHandler {
      * @param callbackSplit an array containing split callback data.
      */
     private void handleTestCallback(Bot bot,
-                                    User user,
+                                    User user, // внутри метода переопределяем этот входной параметр (когда записываем в него значение userRepo.save), это может оказаться неожиданностью для того кода, откуда вызывается этот метод
+                                    // если предполагается, что вызывающий код должен продолжить работать с изменённым user-ом, лучше возвращать изменённого пользователя из этого метода, чем менять значение входного параметра
+                                    // если не предполагается использование изменённого user-а вызывающим кодом, результат userRepo.save(user) лучше сохранить в отдельную внутреннюю переменную
                                     String[] callbackSplit) {
         switch (callbackSplit[1]) {
             case "0" -> {

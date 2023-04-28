@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 public class Aws {
 
     private static final String BASE_URL = "http://ec2-34-201-216-252.compute-1.amazonaws.com/";
+    // однозначно нужно вынести в application.yml или environments variables
     private final RestTemplate restTemplate;
 
     public Aws(RestTemplate restTemplate) {
@@ -32,8 +33,9 @@ public class Aws {
                             String text) {
         String url = BASE_URL + "translate" +
                 "?source=" + source.name() + "&target=" + target.name();
+        // выглядит небезопасно, возможно, лучше собрать url URIBuilder-ом, чтобы гарантированно избежать попадания в него каких-либо инъекций (URIBuilder сам их не допустит)
         restTemplate.getMessageConverters()
-                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8)); // достаточно сделать это лишь однажды за всё время выполнения
         return restTemplate.postForObject(url, text, String.class);
     }
 
@@ -47,7 +49,7 @@ public class Aws {
     public byte[] polly(Language target,
                         String text) {
         String url = BASE_URL + "polly" +
-                "?target=" + target.name();
+                "?target=" + target.name(); // возможно, стоит опять же использовать URIBuilder
         return restTemplate.postForObject(url, text, byte[].class);
     }
 

@@ -22,6 +22,8 @@
         <java.version>17</java.version>
         <software.amazon.awssdk.version>2.19.23</software.amazon.awssdk.version>
         <org.telegram.telegrambots.version>6.1.0</org.telegram.telegrambots.version>
+        <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
+        <org.jetbrains.annotations.version>RELEASE</org.jetbrains.annotations.version>
     </properties>
 
     <dependencyManagement>
@@ -32,6 +34,21 @@
                 <version>${software.amazon.awssdk.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.telegram</groupId>
+                <artifactId>telegrambots</artifactId>
+                <version>${org.telegram.telegrambots.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>${org.jetbrains.annotations.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -69,12 +86,10 @@
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots</artifactId>
-            <version>6.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>7.0.1.Final</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -88,7 +103,6 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

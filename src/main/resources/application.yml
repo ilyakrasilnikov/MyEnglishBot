@@ -5,4 +5,4 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create #точно так? пользователи и их прогресс/результат теста в табличке User очистятся
