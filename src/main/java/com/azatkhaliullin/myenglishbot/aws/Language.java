@@ -5,11 +5,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Available languages.
+ * The Language enum represents the available languages for translation and synthesis in the Aws class.
  */
 public enum Language {
+    /**
+     * RU - Russian language.
+     * EN - English language.
+     */
     RU, EN;
 
+    /**
+     * Returns a list of all possible language pairs.
+     *
+     * @return a list of all possible language pairs.
+     */
     public static List<String> getLanguagePairs() {
         return Arrays.stream(Language.values())
                 .flatMap(l1 -> Arrays.stream(Language.values())

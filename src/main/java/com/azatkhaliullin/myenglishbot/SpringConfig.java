@@ -11,6 +11,7 @@ import com.azatkhaliullin.myenglishbot.domain.BotCommandHandler;
 import com.azatkhaliullin.myenglishbot.dto.BotProperties;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootConfiguration
 public class SpringConfig {
@@ -34,8 +35,13 @@ public class SpringConfig {
     }
 
     @Bean
-    public Aws awsTranslator() {
-        return new Aws();
+    public Aws awsTranslator(RestTemplate restTemplate) {
+        return new Aws(restTemplate);
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     @Bean

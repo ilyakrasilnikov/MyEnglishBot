@@ -26,6 +26,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * This class represents a Telegram bot that extends TelegramLongPollingBot class. It is used to interact with users through Telegram and perform actions based on user input.
+ * <p>
+ * It requires BotProperties, BotCommandHandler, BotCallbackQueryHandler, UserRepository and Aws objects as input parameters for its constructor.
+ */
 @Slf4j
 public class Bot extends TelegramLongPollingBot {
 
@@ -58,6 +63,12 @@ public class Bot extends TelegramLongPollingBot {
         return botProperties.getToken();
     }
 
+    /**
+     * This method is called whenever an update is received by the bot.
+     * It checks whether the update contains a callback query or a message and performs the corresponding action.
+     *
+     * @param update an Update object representing the update received by the bot.
+     */
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasCallbackQuery()) {
@@ -67,6 +78,12 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Sends a message to the target user.
+     *
+     * @param user        a User object representing the user to whom the message will be sent.
+     * @param messageText a String representing the text of the message to be sent.
+     */
     public void sendMessage(User user,
                             String messageText) {
         SendMessage sm = SendMessage.builder()
@@ -76,10 +93,16 @@ public class Bot extends TelegramLongPollingBot {
         try {
             execute(sm);
         } catch (TelegramApiException e) {
-            log.error("Ошибка при отправке сообщения", e);
+            log.error("Error when sending a message", e);
         }
     }
 
+    /**
+     * Sends a voice message to the target user.
+     *
+     * @param user        a User object representing the user to whom the voice message will be sent.
+     * @param messageText a String representing the text of the voice message to be sent in the format "text,language".
+     */
     public void sendVoice(User user,
                           String messageText) {
         String[] splitMessage = messageText.split(",");
@@ -96,10 +119,17 @@ public class Bot extends TelegramLongPollingBot {
         try {
             execute(sv);
         } catch (TelegramApiException e) {
-            log.error("Ошибка при отправке голового сообщения", e);
+            log.error("Error when sending a voice message", e);
         }
     }
 
+    /**
+     * Sends a message with an inline keyboard to the target user.
+     *
+     * @param user        the user to send the message to.
+     * @param messageText the text of the message to send.
+     * @param lists       a list of lists of inline keyboard buttons to display.
+     */
     public void sendInlineKeyboard(User user,
                                    String messageText,
                                    List<List<InlineKeyboardButton>> lists) {
@@ -114,10 +144,17 @@ public class Bot extends TelegramLongPollingBot {
             user.setInlineMessageId(execute(sm).getMessageId());
             userRepo.save(user);
         } catch (TelegramApiException e) {
-            log.error("Ошибка при отправке встроенной клавиатуре", e);
+            log.error("Error when sending a inline keyboard", e);
         }
     }
 
+    /**
+     * Edits the text and inline keyboard of a message previously sent to the target user.
+     *
+     * @param user        the user that received the original message.
+     * @param messageText the new text for the message.
+     * @param lists       a list of lists of inline keyboard buttons to display.
+     */
     public void editMessageWithInline(User user,
                                       String messageText,
                                       List<List<InlineKeyboardButton>> lists) {
@@ -132,15 +169,25 @@ public class Bot extends TelegramLongPollingBot {
         try {
             execute(editMessageText);
         } catch (TelegramApiException e) {
-            log.error("Ошибка при отправке измененнной встроенной клавиатуре", e);
+            log.error("Error when sending a modified inline keyboard", e);
         }
     }
 
+    /**
+     * Handles a callback query received from Telegram.
+     *
+     * @param callbackQuery the callback query to handle.
+     */
     private void processingCallbackQuery(CallbackQuery callbackQuery) {
         User user = toUser(callbackQuery.getFrom());
         botCallbackQueryHandler.handleCallback(this, user, callbackQuery);
     }
 
+    /**
+     * Handles a regular text message received from Telegram.
+     *
+     * @param msg the message to handle.
+     */
     private void processingMessage(Message msg) {
         User userFromMessage = toUser(msg.getFrom());
 
@@ -160,7 +207,7 @@ public class Bot extends TelegramLongPollingBot {
                     translate,
                     BotUtility.buildInlineKeyboardMarkup(list
                                     .stream().map(item -> Pair.of(
-                                            item, BotUtility.KeyboardType.VOICE.name() + "/" +
+                                            item, BotUtility.InlineKeyboardType.VOICE.name() + "/" +
                                                     translate + "," + target))
                                     .collect(Collectors.toList()),
                             1));
@@ -171,6 +218,12 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Converts a Telegram User object to an application User object, saving it to the database if necessary.
+     *
+     * @param userTG the Telegram User object to convert.
+     * @return the relevant application User object.
+     */
     private User toUser(org.telegram.telegrambots.meta.api.objects.User userTG) {
         User userFromMessage = User.builder()
                 .id(userTG.getId())

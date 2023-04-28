@@ -22,5 +22,5 @@ public class MyEnglishBotApplication {
             log.error("Ошибка при регистрации бота", e);
         }
     }
-//TODO Заполнение таблицы уровней английского
+
 }

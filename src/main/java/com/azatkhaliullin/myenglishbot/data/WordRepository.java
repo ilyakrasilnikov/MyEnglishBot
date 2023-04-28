@@ -1,8 +1,0 @@
-package com.azatkhaliullin.myenglishbot.data;
-
-import com.azatkhaliullin.myenglishbot.dto.Word;
-import org.springframework.data.repository.CrudRepository;
-
-public interface WordRepository
-        extends CrudRepository<Word, Long> {
-}

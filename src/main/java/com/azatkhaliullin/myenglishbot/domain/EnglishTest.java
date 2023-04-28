@@ -19,6 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Represents an English test with a list of questions, current index, level, and score.
+ * Test questions are loaded from a JSON file located in the resources' folder.
+ */
 @Entity
 @Slf4j
 @Data
@@ -42,7 +46,7 @@ public class EnglishTest {
             questions = objectMapper.readValue(resource.getInputStream(), new TypeReference<>() {
             });
         } catch (IOException e) {
-            log.error("Не удалось загрузить вопросы для теста", e);
+            log.error("Failed to upload test questions", e);
         }
         this.questions = questions;
         currentIndex = 0;
@@ -50,6 +54,11 @@ public class EnglishTest {
         score = 0;
     }
 
+    /**
+     * Returns the next question in the test, if available.
+     *
+     * @return an Optional object containing the next question or empty if no more questions are available.
+     */
     public Optional<Question> getNextQuestion() {
         if (currentIndex >= questions.size()) {
             return Optional.empty();
@@ -57,10 +66,16 @@ public class EnglishTest {
         return Optional.of(questions.get(currentIndex));
     }
 
+    /**
+     * Increments the current index to move to the next question.
+     */
     public void incrementCurrentIndex() {
         currentIndex++;
     }
 
+    /**
+     * Calculates the score based on the number of correctly answered questions.
+     */
     public void calculateScore() {
         int[] scoreBoundaries = {6, 14, 29, 39, 50};
         int[] points = {1, 2, 3, 4, 5};
@@ -72,6 +87,11 @@ public class EnglishTest {
         }
     }
 
+    /**
+     * Calculates the level based on the score.
+     *
+     * @return the calculated level.
+     */
     public int calculateLevel() {
         int[] levelBoundaries = {10, 30, 50, 80, 100, 120, 140, 156, 162};
         int[] levels = {1, 2, 3, 4, 5, 6, 7, 8, 9};
