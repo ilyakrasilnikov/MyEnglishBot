@@ -1,9 +1,13 @@
 package com.azatkhaliullin.myenglishbot.aws;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.client.utils.URIBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -12,11 +16,14 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class Aws {
 
-    private static final String BASE_URL = "http://ec2-34-201-216-252.compute-1.amazonaws.com/";
+    @Value("${aws.BASE_URL}")
+    private String BASE_URL;
     private final RestTemplate restTemplate;
 
     public Aws(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+        restTemplate.getMessageConverters()
+                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
     }
 
     /**
@@ -30,11 +37,16 @@ public class Aws {
     public String translate(Language source,
                             Language target,
                             String text) {
-        String url = BASE_URL + "translate" +
-                "?source=" + source.name() + "&target=" + target.name();
-        restTemplate.getMessageConverters()
-                .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
-        return restTemplate.postForObject(url, text, String.class);
+        try {
+            URI url = new URIBuilder(BASE_URL)
+                    .setPath("/translate")
+                    .addParameter("source", source.name())
+                    .addParameter("target", target.name()).build();
+            return restTemplate.postForObject(url, text, String.class);
+        } catch (URISyntaxException e) {
+            log.error("Error when constructing the url address ", e);
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -46,9 +58,15 @@ public class Aws {
      */
     public byte[] polly(Language target,
                         String text) {
-        String url = BASE_URL + "polly" +
-                "?target=" + target.name();
-        return restTemplate.postForObject(url, text, byte[].class);
+        try {
+            URI url = new URIBuilder(BASE_URL)
+                    .setPath("/polly")
+                    .addParameter("target", target.name()).build();
+            return restTemplate.postForObject(url, text, byte[].class);
+        } catch (URISyntaxException e) {
+            log.error("Error when constructing the url address ", e);
+            throw new RuntimeException(e);
+        }
     }
 
 }

@@ -1,11 +1,14 @@
-package com.azatkhaliullin.myenglishbot.domain;
+package com.azatkhaliullin.myenglishbot;
 
 import com.azatkhaliullin.myenglishbot.aws.Aws;
 import com.azatkhaliullin.myenglishbot.aws.Language;
 import com.azatkhaliullin.myenglishbot.data.UserRepository;
+import com.azatkhaliullin.myenglishbot.handler.BotCallbackQueryHandler;
+import com.azatkhaliullin.myenglishbot.handler.BotCommandHandler;
 import com.azatkhaliullin.myenglishbot.dto.BotProperties;
 import com.azatkhaliullin.myenglishbot.dto.User;
 import com.azatkhaliullin.myenglishbot.dto.User.DialogueStep;
+import com.azatkhaliullin.myenglishbot.utility.BotUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -101,14 +104,13 @@ public class Bot extends TelegramLongPollingBot {
      * Sends a voice message to the target user.
      *
      * @param user        a User object representing the user to whom the voice message will be sent.
-     * @param messageText a String representing the text of the voice message to be sent in the format "text,language".
+     * @param messageText a String representing the text of the voice message.
      */
     public void sendVoice(User user,
                           String messageText) {
-        String[] splitMessage = messageText.split(",");
         byte[] voiceBytes = aws.polly(
-                Language.valueOf(splitMessage[1]),
-                splitMessage[0]);
+                user.getTarget(),
+                messageText);
         InputStream inputStream = new ByteArrayInputStream(voiceBytes);
         InputFile voiceFile = new InputFile()
                 .setMedia(inputStream, messageText);
@@ -207,8 +209,7 @@ public class Bot extends TelegramLongPollingBot {
                     translate,
                     BotUtility.buildInlineKeyboardMarkup(list
                                     .stream().map(item -> Pair.of(
-                                            item, BotUtility.InlineKeyboardType.VOICE.name() + "/" +
-                                                    translate + "," + target))
+                                            item, BotUtility.InlineKeyboardType.VOICE.name() + "/" + translate))
                                     .collect(Collectors.toList()),
                             1));
             userFromMessage.setDialogueStep(null);
@@ -234,7 +235,8 @@ public class Bot extends TelegramLongPollingBot {
             if (userFromDbOptional.get().getUsername().equals(userFromMessage.getUsername())) {
                 return userFromDbOptional.get();
             } else {
-                return userRepo.save(userFromDbOptional.get().toBuilder().username(userFromMessage.getUsername()).build());
+                return userRepo.save(
+                        userFromDbOptional.get().toBuilder().username(userFromMessage.getUsername()).build());
             }
         }
         return userRepo.save(userFromMessage);

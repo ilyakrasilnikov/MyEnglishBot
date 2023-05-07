@@ -1,5 +1,6 @@
-package com.azatkhaliullin.myenglishbot.domain;
+package com.azatkhaliullin.myenglishbot.utility;
 
+import com.azatkhaliullin.myenglishbot.Bot;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;

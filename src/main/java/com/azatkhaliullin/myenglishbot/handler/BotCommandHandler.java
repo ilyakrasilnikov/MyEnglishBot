@@ -1,6 +1,8 @@
-package com.azatkhaliullin.myenglishbot.domain;
+package com.azatkhaliullin.myenglishbot.handler;
 
 import com.azatkhaliullin.myenglishbot.aws.Language;
+import com.azatkhaliullin.myenglishbot.Bot;
+import com.azatkhaliullin.myenglishbot.utility.BotUtility;
 import com.azatkhaliullin.myenglishbot.dto.User;
 import org.springframework.data.util.Pair;
 import org.telegram.telegrambots.meta.api.objects.Message;

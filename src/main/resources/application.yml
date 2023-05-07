@@ -3,6 +3,6 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-  jpa:
-    hibernate:
-      ddl-auto: create
+
+aws:
+  BASE_URL: "http://ec2-34-201-216-252.compute-1.amazonaws.com/"

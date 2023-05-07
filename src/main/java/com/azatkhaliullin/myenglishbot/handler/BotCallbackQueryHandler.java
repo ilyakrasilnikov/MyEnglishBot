@@ -1,13 +1,16 @@
-package com.azatkhaliullin.myenglishbot.domain;
+package com.azatkhaliullin.myenglishbot.handler;
 
 import com.azatkhaliullin.myenglishbot.aws.Language;
 import com.azatkhaliullin.myenglishbot.data.AnswerRepository;
 import com.azatkhaliullin.myenglishbot.data.EnglishLevelRepository;
 import com.azatkhaliullin.myenglishbot.data.EnglishTestRepository;
 import com.azatkhaliullin.myenglishbot.data.UserRepository;
+import com.azatkhaliullin.myenglishbot.Bot;
+import com.azatkhaliullin.myenglishbot.EnglishTest;
+import com.azatkhaliullin.myenglishbot.utility.EnglishTestUtility;
 import com.azatkhaliullin.myenglishbot.dto.Answer;
 import com.azatkhaliullin.myenglishbot.dto.User;
-import com.azatkhaliullin.myenglishbot.domain.BotUtility.InlineKeyboardType;
+import com.azatkhaliullin.myenglishbot.utility.BotUtility.InlineKeyboardType;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 import java.util.HashMap;
@@ -120,22 +123,23 @@ public class BotCallbackQueryHandler {
     private void handleTestCallback(Bot bot,
                                     User user,
                                     String[] callbackSplit) {
+        User originUser = user;
         switch (callbackSplit[1]) {
             case "0" -> {
-                if (user.getEnglishTest() == null) {
-                    user.setEnglishTest(new EnglishTest());
-                    user = userRepo.save(user);
+                if (originUser.getEnglishTest() == null) {
+                    originUser.setEnglishTest(new EnglishTest());
+                    originUser = userRepo.save(originUser);
                 }
-                EnglishTestUtility.sendQuestion(bot, user, englishTestRepo, englishLevelRepo);
+                EnglishTestUtility.sendQuestion(bot, originUser, englishTestRepo, englishLevelRepo);
             }
             case "1" -> {
-                user.setEnglishTest(new EnglishTest());
-                user = userRepo.save(user);
-                EnglishTestUtility.sendQuestion(bot, user, englishTestRepo, englishLevelRepo);
+                originUser.setEnglishTest(new EnglishTest());
+                originUser = userRepo.save(originUser);
+                EnglishTestUtility.sendQuestion(bot, originUser, englishTestRepo, englishLevelRepo);
             }
             case "2" -> {
-                EnglishTest englishTest = user.getEnglishTest();
-                EnglishTestUtility.sendResult(bot, user, englishTest, englishLevelRepo);
+                EnglishTest englishTest = originUser.getEnglishTest();
+                EnglishTestUtility.sendResult(bot, originUser, englishTest, englishLevelRepo);
             }
         }
     }

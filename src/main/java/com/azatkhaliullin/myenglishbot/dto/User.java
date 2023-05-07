@@ -1,6 +1,6 @@
 package com.azatkhaliullin.myenglishbot.dto;
 
-import com.azatkhaliullin.myenglishbot.domain.EnglishTest;
+import com.azatkhaliullin.myenglishbot.EnglishTest;
 import com.azatkhaliullin.myenglishbot.aws.Language;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -27,7 +27,7 @@ public class User {
     private Language target;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private EnglishTest englishTest;
-    private int InlineMessageId;
+    private int inlineMessageId;
 
     public enum DialogueStep {
         WAIT_FOR_TRANSLATION

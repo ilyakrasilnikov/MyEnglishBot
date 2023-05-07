@@ -1,7 +1,9 @@
-package com.azatkhaliullin.myenglishbot.domain;
+package com.azatkhaliullin.myenglishbot.utility;
 
 import com.azatkhaliullin.myenglishbot.data.EnglishLevelRepository;
 import com.azatkhaliullin.myenglishbot.data.EnglishTestRepository;
+import com.azatkhaliullin.myenglishbot.Bot;
+import com.azatkhaliullin.myenglishbot.EnglishTest;
 import com.azatkhaliullin.myenglishbot.dto.Answer;
 import com.azatkhaliullin.myenglishbot.dto.Question;
 import com.azatkhaliullin.myenglishbot.dto.User;
