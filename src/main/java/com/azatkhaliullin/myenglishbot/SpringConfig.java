@@ -1,18 +1,16 @@
 package com.azatkhaliullin.myenglishbot;
 
-import com.azatkhaliullin.myenglishbot.aws.Aws;
-import com.azatkhaliullin.myenglishbot.data.AnswerRepository;
-import com.azatkhaliullin.myenglishbot.data.EnglishLevelRepository;
-import com.azatkhaliullin.myenglishbot.data.EnglishTestRepository;
 import com.azatkhaliullin.myenglishbot.data.UserRepository;
+import com.azatkhaliullin.myenglishbot.dto.BotProperties;
 import com.azatkhaliullin.myenglishbot.handler.BotCallbackQueryHandler;
 import com.azatkhaliullin.myenglishbot.handler.BotCommandHandler;
-import com.azatkhaliullin.myenglishbot.dto.BotProperties;
-import org.springframework.boot.SpringBootConfiguration;
+import com.azatkhaliullin.myenglishbot.service.AwsService;
+import com.azatkhaliullin.myenglishbot.service.EnglishTestService;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
-@SpringBootConfiguration
+@Configuration
 public class SpringConfig {
 
     @Bean
@@ -20,12 +18,12 @@ public class SpringConfig {
                    BotCommandHandler botCommandHandler,
                    BotCallbackQueryHandler botCallbackQueryHandler,
                    UserRepository userRepo,
-                   Aws aws) {
+                   AwsService awsService) {
         return new Bot(botProperties,
                 botCommandHandler,
                 botCallbackQueryHandler,
                 userRepo,
-                aws);
+                awsService);
     }
 
     @Bean
@@ -34,8 +32,13 @@ public class SpringConfig {
     }
 
     @Bean
-    public Aws awsTranslator(RestTemplate restTemplate) {
-        return new Aws(restTemplate);
+    public AwsService awsService(RestTemplate restTemplate) {
+        return new AwsService(restTemplate);
+    }
+
+    @Bean
+    public EnglishTestService englishTestService(RestTemplate restTemplate) {
+        return new EnglishTestService(restTemplate);
     }
 
     @Bean
@@ -50,10 +53,8 @@ public class SpringConfig {
 
     @Bean
     public BotCallbackQueryHandler botCallbackQueryHandler(UserRepository userRepo,
-                                                           EnglishTestRepository englishTestRepo,
-                                                           EnglishLevelRepository englishLevelRepo,
-                                                           AnswerRepository answerRepo) {
-        return new BotCallbackQueryHandler(userRepo, englishTestRepo, englishLevelRepo, answerRepo);
+                                                           EnglishTestService englishTestService) {
+        return new BotCallbackQueryHandler(userRepo, englishTestService);
     }
 
 }

@@ -14,16 +14,18 @@
     </parent>
 
     <groupId>com.azatkhaliullin</groupId>
-    <artifactId>MyEnglishBot</artifactId>
+    <artifactId>EnglishBot</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>MyEnglishBot</name>
-    <description>MyEnglishBot</description>
+    <name>EnglishBot</name>
+    <description>EnglishBot</description>
 
     <properties>
         <java.version>17</java.version>
         <software.amazon.awssdk.version>2.19.23</software.amazon.awssdk.version>
         <org.telegram.telegrambots.version>6.1.0</org.telegram.telegrambots.version>
+        <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
+        <h2.version>2.1.214</h2.version>
     </properties>
 
     <dependencyManagement>
@@ -74,12 +76,23 @@
             <version>${org.telegram.telegrambots.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
+        </dependency>
+        <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>translate</artifactId>
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>polly</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

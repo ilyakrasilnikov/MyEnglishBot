@@ -1,11 +1,12 @@
 package com.azatkhaliullin.myenglishbot.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-public class Answer {
+@Setter
+public class EnglishTest {
 
     private Long id;
-    private String value;
 
 }

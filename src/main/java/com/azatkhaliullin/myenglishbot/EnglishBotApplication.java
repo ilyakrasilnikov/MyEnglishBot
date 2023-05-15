@@ -10,10 +10,10 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 @SpringBootApplication
 @Slf4j
-public class MyEnglishBotApplication {
+public class EnglishBotApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(MyEnglishBotApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(EnglishBotApplication.class, args);
         try {
             new TelegramBotsApi(DefaultBotSession.class).
                     registerBot(context.getBean(Bot.class));
@@ -21,5 +21,4 @@ public class MyEnglishBotApplication {
             log.error("Ошибка при регистрации бота", e);
         }
     }
-
 }

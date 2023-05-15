@@ -4,5 +4,8 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
-aws:
-  BASE_URL: "http://ec2-34-201-216-252.compute-1.amazonaws.com/"
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+BASE_URL: "http://ec2-34-201-216-252.compute-1.amazonaws.com/"

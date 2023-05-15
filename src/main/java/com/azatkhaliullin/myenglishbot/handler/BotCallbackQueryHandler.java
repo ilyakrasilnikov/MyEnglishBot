@@ -1,21 +1,17 @@
 package com.azatkhaliullin.myenglishbot.handler;
 
-import com.azatkhaliullin.myenglishbot.aws.Language;
-import com.azatkhaliullin.myenglishbot.data.AnswerRepository;
-import com.azatkhaliullin.myenglishbot.data.EnglishLevelRepository;
-import com.azatkhaliullin.myenglishbot.data.EnglishTestRepository;
-import com.azatkhaliullin.myenglishbot.data.UserRepository;
 import com.azatkhaliullin.myenglishbot.Bot;
-import com.azatkhaliullin.myenglishbot.EnglishTest;
-import com.azatkhaliullin.myenglishbot.utility.EnglishTestUtility;
-import com.azatkhaliullin.myenglishbot.dto.Answer;
+import com.azatkhaliullin.myenglishbot.dto.Language;
+import com.azatkhaliullin.myenglishbot.data.UserRepository;
 import com.azatkhaliullin.myenglishbot.dto.User;
-import com.azatkhaliullin.myenglishbot.utility.BotUtility.InlineKeyboardType;
+import com.azatkhaliullin.myenglishbot.service.EnglishTestService;
+import com.azatkhaliullin.myenglishbot.BotUtility.InlineKeyboardType;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * A functional interface representing a callback query handler.
@@ -36,25 +32,20 @@ interface CallbackQueryHandler {
  * EnglishLevelRepository, and AnswerRepository to store and retrieve data related to the user's test and answers.
  */
 public class BotCallbackQueryHandler {
+
     private final Map<InlineKeyboardType, CallbackQueryHandler> callbackQueries;
     private final UserRepository userRepo;
-    private final EnglishTestRepository englishTestRepo;
-    private final EnglishLevelRepository englishLevelRepo;
-    private final AnswerRepository answerRepo;
+    private final EnglishTestService englishTestService;
 
     public BotCallbackQueryHandler(UserRepository userRepo,
-                                   EnglishTestRepository englishTestRepo,
-                                   EnglishLevelRepository englishLevelRepo,
-                                   AnswerRepository answerRepo) {
+                                   EnglishTestService englishTestService) {
         this.userRepo = userRepo;
-        this.englishTestRepo = englishTestRepo;
-        this.englishLevelRepo = englishLevelRepo;
-        this.answerRepo = answerRepo;
+        this.englishTestService = englishTestService;
         callbackQueries = new HashMap<>();
         callbackQueries.put(InlineKeyboardType.LANGUAGE, this::handleTranslateCallback);
         callbackQueries.put(InlineKeyboardType.VOICE, this::handleVoiceCallback);
         callbackQueries.put(InlineKeyboardType.TEST, this::handleTestCallback);
-        callbackQueries.put(InlineKeyboardType.ANSWERS, this::handleAnswersCallback);
+        callbackQueries.put(InlineKeyboardType.ANSWER, this::handleAnswersCallback);
     }
 
     /**
@@ -123,23 +114,25 @@ public class BotCallbackQueryHandler {
     private void handleTestCallback(Bot bot,
                                     User user,
                                     String[] callbackSplit) {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
         User originUser = user;
         switch (callbackSplit[1]) {
             case "0" -> {
-                if (originUser.getEnglishTest() == null) {
-                    originUser.setEnglishTest(new EnglishTest());
+                if (originUser.getEnglishTestId() == null) {
+                    originUser.setEnglishTestId(englishTestService.getEnglishTest().getId());
                     originUser = userRepo.save(originUser);
                 }
-                EnglishTestUtility.sendQuestion(bot, originUser, englishTestRepo, englishLevelRepo);
+                englishTestService.sendQuestion(bot, originUser);
             }
             case "1" -> {
-                originUser.setEnglishTest(new EnglishTest());
+                executorService.submit(() -> englishTestService.deleteEnglishTest(user.getEnglishTestId()));
+                originUser.setEnglishTestId(englishTestService.getEnglishTest().getId());
                 originUser = userRepo.save(originUser);
-                EnglishTestUtility.sendQuestion(bot, originUser, englishTestRepo, englishLevelRepo);
+                englishTestService.sendQuestion(bot, originUser);
             }
             case "2" -> {
-                EnglishTest englishTest = originUser.getEnglishTest();
-                EnglishTestUtility.sendResult(bot, originUser, englishTest, englishLevelRepo);
+                String result = englishTestService.getResult(user.getEnglishTestId());
+                bot.sendMessage(user, result);
             }
         }
     }
@@ -158,9 +151,8 @@ public class BotCallbackQueryHandler {
     private void handleAnswersCallback(Bot bot,
                                        User user,
                                        String[] callbackSplit) {
-        Optional<Answer> optionalAnswer = answerRepo.findById(Long.valueOf(callbackSplit[1]));
-        optionalAnswer.ifPresent(answer -> EnglishTestUtility.checkAnswer(user.getEnglishTest(), answer));
-        EnglishTestUtility.sendQuestion(bot, user, englishTestRepo, englishLevelRepo);
+        englishTestService.checkAnswer(user.getEnglishTestId(), callbackSplit[1]);
+        englishTestService.sendQuestion(bot, user);
     }
 
 }

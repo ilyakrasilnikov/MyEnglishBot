@@ -1,6 +1,5 @@
-package com.azatkhaliullin.myenglishbot.utility;
+package com.azatkhaliullin.myenglishbot;
 
-import com.azatkhaliullin.myenglishbot.Bot;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
@@ -85,7 +84,7 @@ public class BotUtility {
     }
 
     public enum InlineKeyboardType {
-        LANGUAGE, VOICE, TEST, ANSWERS
+        LANGUAGE, VOICE, TEST, ANSWER
     }
 
 }

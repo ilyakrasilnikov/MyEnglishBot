@@ -1,4 +1,4 @@
-package com.azatkhaliullin.myenglishbot.aws;
+package com.azatkhaliullin.myenglishbot.dto;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,4 +28,3 @@ public enum Language {
     }
 
 }
-

@@ -1,5 +1,6 @@
-package com.azatkhaliullin.myenglishbot.aws;
+package com.azatkhaliullin.myenglishbot.service;
 
+import com.azatkhaliullin.myenglishbot.dto.Language;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,16 +12,16 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * The Aws class provides methods for interacting with Amazon Web Services (AWS).
+ * The AwsService class provides methods for interacting with Amazon Web Services (AWS).
  */
 @Slf4j
-public class Aws {
+public class AwsService {
 
-    @Value("${aws.BASE_URL}")
+    @Value("${BASE_URL}")
     private String BASE_URL;
     private final RestTemplate restTemplate;
 
-    public Aws(RestTemplate restTemplate) {
+    public AwsService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         restTemplate.getMessageConverters()
                 .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));

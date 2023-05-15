@@ -1,14 +1,13 @@
 package com.azatkhaliullin.myenglishbot;
 
-import com.azatkhaliullin.myenglishbot.aws.Aws;
-import com.azatkhaliullin.myenglishbot.aws.Language;
+import com.azatkhaliullin.myenglishbot.service.AwsService;
+import com.azatkhaliullin.myenglishbot.dto.Language;
 import com.azatkhaliullin.myenglishbot.data.UserRepository;
 import com.azatkhaliullin.myenglishbot.handler.BotCallbackQueryHandler;
 import com.azatkhaliullin.myenglishbot.handler.BotCommandHandler;
 import com.azatkhaliullin.myenglishbot.dto.BotProperties;
 import com.azatkhaliullin.myenglishbot.dto.User;
 import com.azatkhaliullin.myenglishbot.dto.User.DialogueStep;
-import com.azatkhaliullin.myenglishbot.utility.BotUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -41,18 +40,18 @@ public class Bot extends TelegramLongPollingBot {
     private final BotCommandHandler botCommandHandler;
     private final BotCallbackQueryHandler botCallbackQueryHandler;
     private final UserRepository userRepo;
-    private final Aws aws;
+    private final AwsService awsService;
 
     public Bot(BotProperties botProperties,
                BotCommandHandler botCommandHandler,
                BotCallbackQueryHandler botCallbackQueryHandler,
                UserRepository userRepo,
-               Aws aws) {
+               AwsService awsService) {
         this.botProperties = botProperties;
         this.botCommandHandler = botCommandHandler;
         this.botCallbackQueryHandler = botCallbackQueryHandler;
         this.userRepo = userRepo;
-        this.aws = aws;
+        this.awsService = awsService;
         BotUtility.registerBotCommands(this);
     }
 
@@ -108,7 +107,7 @@ public class Bot extends TelegramLongPollingBot {
      */
     public void sendVoice(User user,
                           String messageText) {
-        byte[] voiceBytes = aws.polly(
+        byte[] voiceBytes = awsService.polly(
                 user.getTarget(),
                 messageText);
         InputStream inputStream = new ByteArrayInputStream(voiceBytes);
@@ -199,7 +198,7 @@ public class Bot extends TelegramLongPollingBot {
 
         if (userFromMessage.getDialogueStep() == DialogueStep.WAIT_FOR_TRANSLATION) {
             Language target = userFromMessage.getTarget();
-            String translate = aws.translate(
+            String translate = awsService.translate(
                     userFromMessage.getSource(),
                     target,
                     msg.getText());
